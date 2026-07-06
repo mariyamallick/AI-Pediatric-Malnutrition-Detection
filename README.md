@@ -49,4 +49,9 @@ The project is intended as a clinical decision-support tool and does not replace
 
 ## Documentation
 
-Project research and planning documents are available in the `docs/` folder.
+Project research and planning documents are available in the `docs/` folder.git 
+
+## Project Documentation
+
+- Research Notes: `docs/research.md`
+- Dataset Planning: `docs/dataset.md`
