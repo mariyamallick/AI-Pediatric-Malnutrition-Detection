@@ -46,3 +46,7 @@ The project is intended as a clinical decision-support tool and does not replace
 ## Status
 
 🚧 Currently under development.
+
+## Documentation
+
+Project research and planning documents are available in the `docs/` folder.
