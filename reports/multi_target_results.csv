@@ -1,0 +1,4 @@
+Target,Accuracy
+underweight_status,1.0
+stunting_status,1.0
+wasting_status,1.0
