@@ -64,3 +64,50 @@ Future versions of the project may include:
 - Dietary history
 - Geographic information
 - Socioeconomic indicators
+
+# Synthetic Dataset Documentation
+
+## Overview
+
+The synthetic pediatric dataset was created during the initial phase of this project to support machine learning model development before incorporating real-world clinical data.
+
+## Purpose
+
+The dataset is used for:
+
+- Exploratory Data Analysis (EDA)
+- Data preprocessing
+- Feature engineering
+- Initial machine learning model training
+- Pipeline testing
+
+## Dataset Characteristics
+
+Number of Records:
+5000
+
+Features:
+
+- Age (months)
+- Sex
+- Weight (kg)
+- Height (cm)
+- MUAC (cm)
+- Weight-for-Age Z-score (WAZ)
+- Height-for-Age Z-score (HAZ)
+- Weight-for-Height Z-score (WHZ)
+- Underweight Status
+- Stunting Status
+- Wasting Status
+- SAM MUAC Flag
+- MAM MUAC Flag
+
+## Data Source
+
+The dataset was synthetically generated with AI assistance to simulate realistic pediatric anthropometric measurements based on WHO child growth concepts. It is intended solely for model development and testing and does not contain real patient information.
+
+## Project Usage
+
+This dataset is used for the initial development of the machine learning pipeline.
+
+The final model will be trained and validated using real-world DHS child health records.
