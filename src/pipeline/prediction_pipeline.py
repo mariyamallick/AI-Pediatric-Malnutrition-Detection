@@ -1,37 +1,42 @@
 import joblib
+import pandas as pd
 from pathlib import Path
 
-MODEL_DIR = Path("../../models")
+from recommendations.nutrition_recommendation import generate_recommendation
 
-underweight_model = joblib.load(
-    MODEL_DIR / "underweight_status_model.pkl"
-)
+# Project root directory
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
-stunting_model = joblib.load(
-    MODEL_DIR / "stunting_status_model.pkl"
-)
+# Models folder
+MODEL_DIR = PROJECT_ROOT / "models"
 
-wasting_model = joblib.load(
-    MODEL_DIR / "wasting_status_model.pkl"
-)
-import pandas as pd
+# Load trained models
+underweight_model = joblib.load(MODEL_DIR / "underweight_status_model.pkl")
+stunting_model = joblib.load(MODEL_DIR / "stunting_status_model.pkl")
+wasting_model = joblib.load(MODEL_DIR / "wasting_status_model.pkl")
+
+print("✅ All models loaded successfully!")
+
 
 def predict_malnutrition(features):
 
     data = pd.DataFrame([features])
 
     underweight = underweight_model.predict(data)[0]
-
     stunting = stunting_model.predict(data)[0]
-
     wasting = wasting_model.predict(data)[0]
 
+    print("Underweight:", underweight)
+    print("Stunting:", stunting)
+    print("Wasting:", wasting)
+
     return {
-        "underweight": int(underweight),
-        "stunting": int(stunting),
-        "wasting": int(wasting)
+        "underweight": underweight,
+        "stunting": stunting,
+        "wasting": wasting
     }
-from recommendations.nutrition_recommendation import generate_recommendation
+
+
 def assess_child(features):
 
     predictions = predict_malnutrition(features)
