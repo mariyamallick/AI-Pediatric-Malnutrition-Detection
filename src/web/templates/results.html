@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Screening results | NutriCheck{% endblock %}
+{% block content %}
+<section class="results-heading"><p class="eyebrow">Screening complete</p><h1>Child nutrition assessment</h1><p class="intro">BMI calculated from submitted measurements: <strong>{{ features.bmi }} kg/m²</strong>.</p></section>
+{% if result.Alerts %}<section class="alert-panel" aria-label="Clinical alerts"><h2>Attention needed</h2>{% for alert in result.Alerts %}<p>{{ alert }}</p>{% endfor %}</section>{% endif %}
+<section class="results-grid">
+  <article class="card"><h2>Model screening</h2><dl class="status-list">{% for name, detected in result.Prediction.items() %}<div><dt>{{ name }}</dt><dd class="{{ 'status-concern' if detected else 'status-normal' }}">{{ 'Detected' if detected else 'Not detected' }}</dd></div>{% endfor %}</dl></article>
+  <article class="card"><h2>Clinical indicators</h2><dl class="status-list">{% for name, status in result.Assessment.items() %}<div><dt>{{ name }}</dt><dd>{{ status }}</dd></div>{% endfor %}</dl></article>
+</section>
+<section class="card recommendations"><h2>Nutrition and care guidance</h2><ul>{% for recommendation in result.Recommendations %}<li>{{ recommendation }}</li>{% endfor %}</ul></section>
+<a class="secondary-link" href="{{ url_for('web.index') }}">Screen another child</a>
+{% endblock %}

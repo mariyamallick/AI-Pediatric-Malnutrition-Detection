@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" aria-labelledby="page-title">
+  <div>
+    <p class="eyebrow">Clinical decision support</p>
+    <h1 id="page-title">Screen a child’s nutritional status</h1>
+    <p class="intro">Enter recent anthropometric measurements to receive model-assisted screening results and age-appropriate nutritional guidance.</p>
+  </div>
+  <aside class="disclaimer" aria-label="Important notice"><strong>For trained users</strong><p>Confirm measurements and act on urgent findings according to your local clinical protocol.</p></aside>
+</section>
+<section class="card form-card" aria-labelledby="form-title">
+  <h2 id="form-title">Child measurements</h2>
+  <p class="form-help">All fields are required. Z-scores should be based on the applicable growth standard.</p>
+  <form method="post" action="{{ url_for('web.assess') }}" novalidate>
+    <div class="form-grid">
+      <label>Age (months)<input name="age_months" type="number" min="0" max="60" step="1" value="{{ values.get('age_months', '') }}" required>{% if errors.get('age_months') %}<small class="field-error">{{ errors['age_months'] }}</small>{% endif %}</label>
+      <label>Sex<select name="sex" required><option value="" disabled {% if not values.get('sex') %}selected{% endif %}>Select sex</option><option value="0" {% if values.get('sex') == '0' %}selected{% endif %}>Female</option><option value="1" {% if values.get('sex') == '1' %}selected{% endif %}>Male</option></select>{% if errors.get('sex') %}<small class="field-error">{{ errors['sex'] }}</small>{% endif %}</label>
+      {% for name, label, min, max, step in [('weight_kg', 'Weight (kg)', '0.5', '40', '0.01'), ('height_cm', 'Height / length (cm)', '30', '130', '0.1'), ('muac_cm', 'MUAC (cm)', '5', '30', '0.1'), ('waz', 'Weight-for-age z-score (WAZ)', '-6', '6', '0.01'), ('haz', 'Height-for-age z-score (HAZ)', '-6', '6', '0.01'), ('whz', 'Weight-for-height z-score (WHZ)', '-6', '6', '0.01')] %}
+      <label>{{ label }}<input name="{{ name }}" type="number" min="{{ min }}" max="{{ max }}" step="{{ step }}" value="{{ values.get(name, '') }}" required>{% if errors.get(name) %}<small class="field-error">{{ errors[name] }}</small>{% endif %}</label>
+      {% endfor %}
+    </div>
+    <button type="submit">Run nutrition screening</button>
+  </form>
+</section>
+{% endblock %}

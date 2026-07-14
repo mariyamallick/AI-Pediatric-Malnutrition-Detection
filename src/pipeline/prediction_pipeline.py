@@ -1,8 +1,10 @@
+import logging
+
 import joblib
 import pandas as pd
 from pathlib import Path
 
-from recommendations.nutrition_recommendation import generate_recommendation
+from src.recommendations.nutrition_recommendation import generate_recommendation
 
 # Project root directory
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -11,11 +13,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 MODEL_DIR = PROJECT_ROOT / "models"
 
 # Load trained models
+logger = logging.getLogger(__name__)
 underweight_model = joblib.load(MODEL_DIR / "underweight_status_model.pkl")
 stunting_model = joblib.load(MODEL_DIR / "stunting_status_model.pkl")
 wasting_model = joblib.load(MODEL_DIR / "wasting_status_model.pkl")
 
-print("✅ All models loaded successfully!")
+logger.info("All malnutrition prediction models loaded successfully.")
 
 
 def predict_malnutrition(features):
@@ -25,10 +28,6 @@ def predict_malnutrition(features):
     underweight = underweight_model.predict(data)[0]
     stunting = stunting_model.predict(data)[0]
     wasting = wasting_model.predict(data)[0]
-
-    print("Underweight:", underweight)
-    print("Stunting:", stunting)
-    print("Wasting:", wasting)
 
     return {
         "underweight": underweight,
