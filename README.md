@@ -51,6 +51,27 @@ The project is intended as a clinical decision-support tool and does not replace
 
 Project research and planning documents are available in the `docs/` folder.git 
 
+## Web Application
+
+The Flask application provides an AI-assisted screening form for children aged 0–60 months. It validates measurements, calculates BMI, runs the three trained models, and displays the recommendation engine's assessment.
+
+### Run locally
+
+Activate the project's virtual environment and install dependencies if needed:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+Then start the application from the project root:
+
+```powershell
+python app.py
+```
+
+Open `http://127.0.0.1:5000` in a browser. For a non-development deployment, set a strong `FLASK_SECRET_KEY` environment variable before starting the app.
+
 ## Project Documentation
 
 - Research Notes: `docs/research.md`
