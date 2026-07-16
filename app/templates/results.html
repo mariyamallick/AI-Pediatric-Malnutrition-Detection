@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Nutrition Assessment Result</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Nutrition Assessment Report</h1>
+
+<h2>Prediction</h2>
+
+<ul>
+    <li><strong>Underweight:</strong> {{ "Detected" if result["Prediction"]["Underweight"] else "Not Detected" }}
+    <li><strong>Stunting:</strong>{{ "Detected" if result["Prediction"]["Stunting"] else "Not Detected" }}
+    <li><strong>Wasting:</strong> {{ "Detected" if result["Prediction"]["Wasting"] else "Not Detected" }}
+</ul>
+
+<hr>
+
+<h2>Assessment</h2>
+
+<ul>
+    <li><strong>MUAC:</strong> {{ result["Assessment"]["MUAC Status"] }}</li>
+    <li><strong>Weight-for-Age:</strong> {{ result["Assessment"]["Weight-for-Age"] }}</li>
+    <li><strong>Height-for-Age:</strong> {{ result["Assessment"]["Height-for-Age"] }}</li>
+    <li><strong>Weight-for-Height:</strong> {{ result["Assessment"]["Weight-for-Height"] }}</li>
+    <li><strong>Age Group:</strong> {{ result["Assessment"]["Age Group"] }}</li>
+</ul>
+
+<hr>
+
+<h2>Nutrition Recommendations</h2>
+
+<ul>
+{% for recommendation in result["Recommendations"] %}
+    <li>{{ recommendation }}</li>
+{% endfor %}
+</ul>
+
+<hr>
+
+<h2>Medical Alerts</h2>
+
+{% if result["Alerts"] %}
+
+<ul>
+{% for alert in result["Alerts"] %}
+    <li>{{ alert }}</li>
+{% endfor %}
+</ul>
+
+{% else %}
+
+<p>No medical alerts.</p>
+
+{% endif %}
+
+<br>
+
+<a href="/">
+<button>New Assessment</button>
+</a>
+
+</div>
+
+</body>
+</html>

@@ -1,5 +1,0 @@
-{% extends "base.html" %}
-{% block title %}Service unavailable | NutriCheck{% endblock %}
-{% block content %}
-<section class="card error-card"><p class="eyebrow">Unable to complete screening</p><h1>Please try again</h1><p>We could not process this assessment. Confirm the values and try again. If the problem continues, contact the system administrator.</p><a class="secondary-link" href="{{ url_for('web.index') }}">Return to the screening form</a></section>
-{% endblock %}

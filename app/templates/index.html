@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Pediatric Malnutrition Detection</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>AI Pediatric Malnutrition Detection</h1>
+
+<p class="subtitle">
+Enter the child's measurements to assess nutritional status.
+</p>
+
+<form action="/predict" method="POST">
+
+<label>Age (Months)</label>
+
+<input type="number" name="age_months" required>
+
+<label>Sex</label>
+
+<select name="sex" required>
+
+<option value="">Select</option>
+
+<option value="0">Female</option>
+
+<option value="1">Male</option>
+
+</select>
+
+<label>Weight (kg)</label>
+
+<input type="number" step="0.1" name="weight_kg" required>
+
+<label>Height (cm)</label>
+
+<input type="number" step="0.1" name="height_cm" required>
+
+<label>MUAC (cm)</label>
+
+<input type="number" step="0.1" name="muac_cm" required>
+
+<label>Weight-for-Age Z Score (WAZ)</label>
+
+<input type="number" step="0.01" name="waz" required>
+
+<label>Height-for-Age Z Score (HAZ)</label>
+
+<input type="number" step="0.01" name="haz" required>
+
+<label>Weight-for-Height Z Score (WHZ)</label>
+
+<input type="number" step="0.01" name="whz" required>
+
+<button type="submit">
+
+Run Nutrition Screening
+
+</button>
+
+</form>
+
+</div>
+
+</body>
+
+</html>
