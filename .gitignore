@@ -21,3 +21,20 @@ env/
 
 # Windows
 Thumbs.db
+
+# Generated PDF reports
+generated_reports/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
