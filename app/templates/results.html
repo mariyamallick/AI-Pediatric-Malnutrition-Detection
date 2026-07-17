@@ -15,58 +15,132 @@
 
 <h1>Nutrition Assessment Report</h1>
 
-<h2>Prediction</h2>
+<h2>Child Information</h2>
 
 <ul>
-    <li><strong>Underweight:</strong> {{ "Detected" if result["Prediction"]["Underweight"] else "Not Detected" }}
-    <li><strong>Stunting:</strong>{{ "Detected" if result["Prediction"]["Stunting"] else "Not Detected" }}
-    <li><strong>Wasting:</strong> {{ "Detected" if result["Prediction"]["Wasting"] else "Not Detected" }}
+    <li><strong>Age:</strong> {{ features["age_months"] }} months</li>
+    <li><strong>Sex:</strong> {{ "Male" if features["sex"] == 1 else "Female" }}</li>
+    <li><strong>Weight:</strong> {{ features["weight_kg"] }} kg</li>
+    <li><strong>Height:</strong> {{ features["height_cm"] }} cm</li>
+    <li><strong>MUAC:</strong> {{ features["muac_cm"] }} cm</li>
 </ul>
+
+<h2>Prediction Results</h2>
+
+<div class="card">
+
+<p>
+<strong>Underweight:</strong>
+
+{% if result["Prediction"]["Underweight"] %}
+
+🔴 Detected
+
+{% else %}
+
+🟢 Not Detected
+
+{% endif %}
+
+</p>
+
+<p>
+<strong>Stunting:</strong>
+
+{% if result["Prediction"]["Stunting"] %}
+
+🔴 Detected
+
+{% else %}
+
+🟢 Not Detected
+
+{% endif %}
+
+</p>
+
+<p>
+<strong>Wasting:</strong>
+
+{% if result["Prediction"]["Wasting"] %}
+
+🔴 Detected
+
+{% else %}
+
+🟢 Not Detected
+
+{% endif %}
+
+</p>
+
+</div>
 
 <hr>
 
-<h2>Assessment</h2>
+<h2>Assessment Summary</h2>
 
-<ul>
-    <li><strong>MUAC:</strong> {{ result["Assessment"]["MUAC Status"] }}</li>
-    <li><strong>Weight-for-Age:</strong> {{ result["Assessment"]["Weight-for-Age"] }}</li>
-    <li><strong>Height-for-Age:</strong> {{ result["Assessment"]["Height-for-Age"] }}</li>
-    <li><strong>Weight-for-Height:</strong> {{ result["Assessment"]["Weight-for-Height"] }}</li>
-    <li><strong>Age Group:</strong> {{ result["Assessment"]["Age Group"] }}</li>
-</ul>
+<div class="card">
 
-<hr>
+<p><strong>MUAC Status:</strong> {{ result["Assessment"]["MUAC Status"] }}</p>
+
+<p><strong>Weight-for-Age:</strong> {{ result["Assessment"]["Weight-for-Age"] }}</p>
+
+<p><strong>Height-for-Age:</strong> {{ result["Assessment"]["Height-for-Age"] }}</p>
+
+<p><strong>Weight-for-Height:</strong> {{ result["Assessment"]["Weight-for-Height"] }}</p>
+
+<p><strong>Age Group:</strong> {{ result["Assessment"]["Age Group"] }}</p>
+
+</div>
 
 <h2>Nutrition Recommendations</h2>
 
+<div class="card">
+
 <ul>
-{% for recommendation in result["Recommendations"] %}
-    <li>{{ recommendation }}</li>
+
+{% for item in result["Recommendations"] %}
+
+<li>✔ {{ item }}</li>
+
 {% endfor %}
+
 </ul>
 
-<hr>
+</div>
 
 <h2>Medical Alerts</h2>
+
+<div class="card">
 
 {% if result["Alerts"] %}
 
 <ul>
-{% for alert in result["Alerts"] %}
-    <li>{{ alert }}</li>
+
+{% for item in result["Alerts"] %}
+
+<li>⚠ {{ item }}</li>
+
 {% endfor %}
+
 </ul>
 
 {% else %}
 
-<p>No medical alerts.</p>
+<p>✅ No medical alerts.</p>
 
 {% endif %}
 
 <br>
 
 <a href="/">
-<button>New Assessment</button>
+<button>
+
+New Assessment
+
+</button>
+
 </a>
 
 </div>
