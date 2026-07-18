@@ -1,64 +1,119 @@
 body{
-    font-family: Arial, Helvetica, sans-serif;
-    background:#f5f7fa;
     margin:0;
     padding:0;
+    font-family:Arial,sans-serif;
+    background:#eef4f9;
 }
 
 .container{
-
-    width:70%;
-    margin:auto;
-    margin-top:80px;
-
+    width:80%;
+    max-width:900px;
+    margin:40px auto;
     background:white;
-
     padding:40px;
-
     border-radius:12px;
-
-    text-align:center;
-
-    box-shadow:0px 5px 15px rgba(0,0,0,0.15);
-
+    box-shadow:0 0 15px rgba(0,0,0,0.1);
 }
 
 h1{
+    text-align:center;
+    color:#0b5394;
+}
 
-    color:#1c4e80;
-
+h2{
+    color:#0b5394;
+    margin-top:30px;
+    border-bottom:2px solid #ddd;
+    padding-bottom:8px;
 }
 
 .subtitle{
+    text-align:center;
+    color:#666;
+    margin-bottom:30px;
+}
 
-    font-size:18px;
+label{
+    display:block;
+    margin-top:15px;
+    font-weight:bold;
+}
 
-    color:#555;
-
-    margin:30px 0;
-
+input,select{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    box-sizing:border-box;
 }
 
 button{
-
-    padding:15px 35px;
-
-    background:#1c4e80;
-
-    color:white;
-
+    margin-top:30px;
+    width:100%;
+    padding:15px;
     border:none;
-
-    border-radius:8px;
-
-    font-size:18px;
-
+    border-radius:6px;
+    background:#0b5394;
+    color:white;
+    font-size:16px;
     cursor:pointer;
-
 }
 
 button:hover{
+    background:#083763;
+}
 
-    background:#163d63;
+.card{
+    background:#f8f9fa;
+    border-radius:10px;
+    padding:20px;
+    margin-top:20px;
+}
 
+ul{
+    padding-left:20px;
+}
+
+li{
+    margin-bottom:10px;
+}
+
+.status{
+    font-weight:bold;
+}
+
+.buttons{
+    display:flex;
+    gap:20px;
+    justify-content:center;
+    margin-top:30px;
+}
+
+.buttons button{
+    background:#0b7dda;
+    color:white;
+    border:none;
+    padding:12px 24px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.buttons button:hover{
+    background:#095ca8;
+}
+.btn {
+    display: inline-block;
+    background: #0b7dda;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #095ca8;
 }

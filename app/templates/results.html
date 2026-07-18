@@ -14,8 +14,31 @@
 <div class="container">
 
 <h1>Nutrition Assessment Report</h1>
+<p>
+Assessment Date:
+{{ today.strftime("%d %B %Y") }}
+</p>
 
 <h2>Child Information</h2>
+<h2>Overall Risk Level</h2>
+
+<div class="card">
+
+{% if result["Risk Level"] == "High" %}
+
+<h3>🔴 High Risk</h3>
+
+{% elif result["Risk Level"] == "Moderate" %}
+
+<h3>🟡 Moderate Risk</h3>
+
+{% else %}
+
+<h3>🟢 Low Risk</h3>
+
+{% endif %}
+
+</div>
 
 <ul>
     <li><strong>Age:</strong> {{ features["age_months"] }} months</li>
@@ -147,3 +170,27 @@ New Assessment
 
 </body>
 </html>
+<hr>
+
+<p style="text-align:center; color:gray;">
+
+AI Pediatric Malnutrition Detection System
+
+<br>
+
+Developed using Machine Learning and Flask
+
+</p>
+<a href="/download-report">
+    <button>Download PDF Report</button>
+</a>
+
+<div class="buttons">
+    <a class="btn" href="{{ url_for('download_report', filename=pdf_file) }}" target="_blank">
+        📄 Download PDF Report
+    </a>
+
+    <a class="btn" href="/">
+        🔄 New Assessment
+    </a>
+</div>

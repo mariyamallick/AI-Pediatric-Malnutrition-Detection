@@ -1,3 +1,6 @@
+from unittest import result
+
+from reportlab.lib import styles
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from pathlib import Path
@@ -82,13 +85,20 @@ def generate_pdf_report(features, result):
 
     # --------------------------------------------------
 
-    story.append(Paragraph("<b>Risk Level</b>", styles["Heading2"]))
-    story.append(
-        Paragraph(result["Risk Level"], styles["BodyText"])
-    )
+    # --------------------------------------------------
+
+    story.append(Paragraph("<b>Assessment</b>", styles["Heading2"]))
+
+    assessment = result["Assessment"]
+
+    for key, value in assessment.items():
+        story.append(
+            Paragraph(f"{key}: {value}", styles["BodyText"])
+        )
 
     story.append(Paragraph("<br/>", styles["Normal"]))
 
+    # --------------------------------------------------
     # --------------------------------------------------
 
     story.append(Paragraph("<b>Recommendations</b>", styles["Heading2"]))
