@@ -3,194 +3,189 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nutrition Assessment Result</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>Nutrition Assessment Report</h1>
-<p>
-Assessment Date:
-{{ today.strftime("%d %B %Y") }}
-</p>
+    <h1>Nutrition Assessment Report</h1>
 
-<h2>Child Information</h2>
-<h2>Overall Risk Level</h2>
+    <p style="text-align:center;">
+        <strong>Assessment Date:</strong>
+        {{ today.strftime("%d %B %Y") }}
+    </p>
 
-<div class="card">
+    <hr>
 
-{% if result["Risk Level"] == "High" %}
+    <h2>Overall Risk</h2>
 
-<h3>🔴 High Risk</h3>
+    <div class="card">
+        <h3>Risk calculation coming soon</h3>
+    </div>
 
-{% elif result["Risk Level"] == "Moderate" %}
+    <hr>
 
-<h3>🟡 Moderate Risk</h3>
+    <h2>Child Information</h2>
 
-{% else %}
+    <div class="card">
 
-<h3>🟢 Low Risk</h3>
+        <p><strong>Age:</strong> {{ features["age_months"] }} months</p>
 
-{% endif %}
+        <p><strong>Sex:</strong>
+            {% if features["sex"] == 1 %}
+                Male
+            {% else %}
+                Female
+            {% endif %}
+        </p>
 
-</div>
+        <p><strong>Weight:</strong> {{ features["weight_kg"] }} kg</p>
 
-<ul>
-    <li><strong>Age:</strong> {{ features["age_months"] }} months</li>
-    <li><strong>Sex:</strong> {{ "Male" if features["sex"] == 1 else "Female" }}</li>
-    <li><strong>Weight:</strong> {{ features["weight_kg"] }} kg</li>
-    <li><strong>Height:</strong> {{ features["height_cm"] }} cm</li>
-    <li><strong>MUAC:</strong> {{ features["muac_cm"] }} cm</li>
-</ul>
+        <p><strong>Height:</strong> {{ features["height_cm"] }} cm</p>
 
-<h2>Prediction Results</h2>
+        <p><strong>MUAC:</strong> {{ features["muac_cm"] }} cm</p>
 
-<div class="card">
+    </div>
 
-<p>
-<strong>Underweight:</strong>
+    <hr>
 
-{% if result["Prediction"]["Underweight"] %}
+    <h2>Prediction Results</h2>
 
-🔴 Detected
+    <div class="card">
 
-{% else %}
+        <p>
+            <strong>Underweight:</strong>
 
-🟢 Not Detected
+            {% if result["Prediction"]["Underweight"] %}
+                🔴 Detected
+            {% else %}
+                🟢 Not Detected
+            {% endif %}
+        </p>
 
-{% endif %}
+        <p>
+            <strong>Stunting:</strong>
 
-</p>
+            {% if result["Prediction"]["Stunting"] %}
+                🔴 Detected
+            {% else %}
+                🟢 Not Detected
+            {% endif %}
+        </p>
 
-<p>
-<strong>Stunting:</strong>
+        <p>
+            <strong>Wasting:</strong>
 
-{% if result["Prediction"]["Stunting"] %}
+            {% if result["Prediction"]["Wasting"] %}
+                🔴 Detected
+            {% else %}
+                🟢 Not Detected
+            {% endif %}
+        </p>
 
-🔴 Detected
+    </div>
 
-{% else %}
+    <hr>
 
-🟢 Not Detected
+    <h2>Assessment Summary</h2>
 
-{% endif %}
+    <div class="card">
 
-</p>
+        <p><strong>MUAC Status:</strong> {{ result["Assessment"]["MUAC Status"] }}</p>
 
-<p>
-<strong>Wasting:</strong>
+        <p><strong>Weight-for-Age:</strong> {{ result["Assessment"]["Weight-for-Age"] }}</p>
 
-{% if result["Prediction"]["Wasting"] %}
+        <p><strong>Height-for-Age:</strong> {{ result["Assessment"]["Height-for-Age"] }}</p>
 
-🔴 Detected
+        <p><strong>Weight-for-Height:</strong> {{ result["Assessment"]["Weight-for-Height"] }}</p>
 
-{% else %}
+        <p><strong>Age Group:</strong> {{ result["Assessment"]["Age Group"] }}</p>
 
-🟢 Not Detected
+    </div>
 
-{% endif %}
+    <hr>
 
-</p>
+    <h2>Nutrition Recommendations</h2>
 
-</div>
+    <div class="card">
 
-<hr>
+        <ul>
 
-<h2>Assessment Summary</h2>
+            {% for item in result["Recommendations"] %}
 
-<div class="card">
+                <li>✔ {{ item }}</li>
 
-<p><strong>MUAC Status:</strong> {{ result["Assessment"]["MUAC Status"] }}</p>
+            {% endfor %}
 
-<p><strong>Weight-for-Age:</strong> {{ result["Assessment"]["Weight-for-Age"] }}</p>
+        </ul>
 
-<p><strong>Height-for-Age:</strong> {{ result["Assessment"]["Height-for-Age"] }}</p>
+    </div>
 
-<p><strong>Weight-for-Height:</strong> {{ result["Assessment"]["Weight-for-Height"] }}</p>
+    <hr>
 
-<p><strong>Age Group:</strong> {{ result["Assessment"]["Age Group"] }}</p>
+    <h2>Medical Alerts</h2>
 
-</div>
+    <div class="card">
 
-<h2>Nutrition Recommendations</h2>
+        {% if result["Alerts"] %}
 
-<div class="card">
+            <ul>
 
-<ul>
+                {% for item in result["Alerts"] %}
 
-{% for item in result["Recommendations"] %}
+                    <li>⚠ {{ item }}</li>
 
-<li>✔ {{ item }}</li>
+                {% endfor %}
 
-{% endfor %}
+            </ul>
 
-</ul>
+        {% else %}
 
-</div>
+            <p>✅ No medical alerts.</p>
 
-<h2>Medical Alerts</h2>
+        {% endif %}
 
-<div class="card">
+    </div>
 
-{% if result["Alerts"] %}
+    <br>
 
-<ul>
+    <div class="buttons">
 
-{% for item in result["Alerts"] %}
+        <a class="btn"
+           href="{{ url_for('download_report', filename=pdf_filename) }}"
+           target="_blank">
 
-<li>⚠ {{ item }}</li>
+            📄 Download PDF Report
 
-{% endfor %}
+        </a>
 
-</ul>
+        <a class="btn" href="/">
 
-{% else %}
+            🔄 New Assessment
 
-<p>✅ No medical alerts.</p>
+        </a>
 
-{% endif %}
+    </div>
 
-<br>
+    <hr>
 
-<a href="/">
-<button>
+    <p style="text-align:center;color:gray;">
 
-New Assessment
+        <strong>AI Pediatric Malnutrition Detection System</strong>
 
-</button>
+        <br><br>
 
-</a>
+        Developed using Machine Learning and Flask
+
+    </p>
 
 </div>
 
 </body>
+
 </html>
-<hr>
-
-<p style="text-align:center; color:gray;">
-
-AI Pediatric Malnutrition Detection System
-
-<br>
-
-Developed using Machine Learning and Flask
-
-</p>
-<a href="/download-report">
-    <button>Download PDF Report</button>
-</a>
-
-<div class="buttons">
-    <a class="btn" href="{{ url_for('download_report', filename=pdf_file) }}" target="_blank">
-        📄 Download PDF Report
-    </a>
-
-    <a class="btn" href="/">
-        🔄 New Assessment
-    </a>
-</div>
