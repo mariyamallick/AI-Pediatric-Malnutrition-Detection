@@ -45,11 +45,8 @@ def validate_input(child):
 def home():
     return render_template("index.html")
 
-
 @app.route("/predict", methods=["POST"])
 def predict():
-
-    print("STEP 1")
 
     sample_child = {
         "age_months": int(request.form["age_months"]),
@@ -62,10 +59,24 @@ def predict():
         "whz": float(request.form["whz"])
     }
 
-    print("STEP 2")
+    errors = validate_input(sample_child)
+    if errors:
+        return render_template("index.html", errors=errors, child=sample_child)
 
-    return "Predict route is working!"
-    
+    result = assess_child(sample_child)
+
+    pdf_path = generate_pdf_report(sample_child, result)
+
+    filename = Path(pdf_path).name
+
+    return render_template(
+        "results.html",
+        features=sample_child,
+        result=result,
+        today=datetime.now(),
+        pdf_filename=filename
+   )
+
 @app.route("/download/<filename>")
 def download_report(filename):
 

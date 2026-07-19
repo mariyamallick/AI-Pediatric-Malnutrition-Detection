@@ -6,3 +6,4 @@ jupyter
 flask
 xgboost
 opencv-python
+reportlab

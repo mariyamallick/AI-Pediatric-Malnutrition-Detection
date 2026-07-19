@@ -134,7 +134,7 @@ def _compute_food_groups(df: pd.DataFrame) -> pd.DataFrame:
     known_groups = [g for g in FOOD_GROUP_SOURCE_VARS if out[g].notna().any()]
     out["dietary_diversity_score"] = out[known_groups].sum(axis=1, min_count=1)
     mdd_met = (out["dietary_diversity_score"] >= MIN_DIETARY_DIVERSITY_THRESHOLD).astype("boolean")
-    mdd_met[~out["iycf_applicable"]] = pd.NA
+    mdd_met = mdd_met.where(out["iycf_applicable"], np.nan)
     out["min_dietary_diversity_met"] = mdd_met
 
     return out
