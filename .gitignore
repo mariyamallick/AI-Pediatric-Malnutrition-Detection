@@ -38,3 +38,10 @@ __pycache__/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Trained ML models
+models/*.pkl
+
+# Python cache
+__pycache__/
+*.pyc

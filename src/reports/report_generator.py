@@ -1,5 +1,3 @@
-from unittest import result
-
 from reportlab.lib import styles
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Paragraph
@@ -9,9 +7,12 @@ from datetime import datetime
 
 def generate_pdf_report(features, result):
 
-    output_folder = Path("generated_reports")
-    output_folder.mkdir(exist_ok=True)
+    PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
+    output_folder = PROJECT_ROOT / "generated_reports"
+
+    output_folder.mkdir(exist_ok=True)    
+    
     filename = f"assessment_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
 
     pdf_path = output_folder / filename

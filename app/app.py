@@ -27,18 +27,10 @@ def validate_input(child):
     if not (30 <= child["height_cm"] <= 130):
         errors.append("Height must be between 30 and 130 cm.")
 
-    if not (5 <= child["muac_cm"] <= 30):
-        errors.append("MUAC must be between 5 and 30 cm.")
-
-    if not (-6 <= child["waz"] <= 6):
-        errors.append("WAZ must be between -6 and 6.")
-
-    if not (-6 <= child["haz"] <= 6):
-        errors.append("HAZ must be between -6 and 6.")
-
-    if not (-6 <= child["whz"] <= 6):
-        errors.append("WHZ must be between -6 and 6.")
-
+    if child["muac_cm"] is not None:
+        if not (5 <= child["muac_cm"] <= 30):
+            errors.append("MUAC must be between 5 and 30 cm.")
+    
     return errors
 
 @app.route("/")
@@ -53,10 +45,7 @@ def predict():
         "sex": int(request.form["sex"]),
         "weight_kg": float(request.form["weight_kg"]),
         "height_cm": float(request.form["height_cm"]),
-        "muac_cm": float(request.form["muac_cm"]),
-        "waz": float(request.form["waz"]),
-        "haz": float(request.form["haz"]),
-        "whz": float(request.form["whz"])
+        "muac_cm": float(request.form["muac_cm"]) if request.form["muac_cm"] else None
     }
 
     errors = validate_input(sample_child)

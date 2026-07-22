@@ -76,3 +76,11 @@ Open `http://127.0.0.1:5000` in a browser. For a non-development deployment, set
 
 - Research Notes: `docs/research.md`
 - Dataset Planning: `docs/dataset.md`
+
+## Dataset
+
+This project uses the DHS (Demographic and Health Surveys) child dataset as the primary source for model training.
+
+The dataset contains over 213,000 pediatric health records with anthropometric measurements, nutritional indicators, and dietary information.
+
+Synthetic data is used only for application testing and demonstration.

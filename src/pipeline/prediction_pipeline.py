@@ -189,11 +189,6 @@ def assess_child(features):
         risk = "High"
 
 
-
-    result["Risk Level"] = risk
-
-
-
     result["Confidence"]=predictions["confidence"]
 
     
