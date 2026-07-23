@@ -1,4 +1,5 @@
 import logging
+from pyexpat import features
 
 import joblib
 
@@ -6,7 +7,7 @@ import pandas as pd
 
 from pathlib import Path
 
-
+from src.growth.growth_calculator import calculate_z_scores
 
 from src.recommendations.nutrition_recommendation import generate_recommendation
 
@@ -52,43 +53,42 @@ logger.info("All malnutrition prediction models loaded successfully.")
 
 def predict_malnutrition(features):
 
+
+    growth = calculate_z_scores(
+    age_months=features["age_months"],
+    sex=features["sex"],
+    weight_kg=features["weight_kg"],
+    height_cm=features["height_cm"]
+    )
+
+    features["waz"] = growth["waz"]
+    features["haz"] = growth["haz"]
+    features["whz"] = growth["whz"]
+    features["bmi"] = growth["bmi"]
+
+    result = {"WHO Growth": growth}
+
     data = pd.DataFrame([features], columns=FEATURE_COLUMNS)
 
-
-
     underweight = underweight_model.predict(data)[0]
-
     underweight_conf = max(underweight_model.predict_proba(data)[0])
-
     stunting = stunting_model.predict(data)[0]
-
     stunting_conf = max(stunting_model.predict_proba(data)[0])
-
     wasting = wasting_model.predict(data)[0]
-
     wasting_conf = max(wasting_model.predict_proba(data)[0])
 
-
-
-    return {
-
+    result.update({
         "underweight": underweight,
-
         "stunting": stunting,
-
         "wasting": wasting,
-
         "confidence": {
-
             "underweight": round(underweight_conf * 100, 2),
-
             "stunting": round(stunting_conf * 100, 2),
-
             "wasting": round(wasting_conf * 100, 2)
-
         }
+    })
 
-    }
+    return result
 
 
 
