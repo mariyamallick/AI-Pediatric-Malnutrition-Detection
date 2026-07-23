@@ -41,14 +41,14 @@ def home():
 def predict():
 
     sample_child = {
-    "age_months": int(request.form["age_months"]),
-    "sex": int(request.form["sex"]),
-    "weight_kg": float(request.form["weight_kg"]),
-    "height_cm": float(request.form["height_cm"]),
-
-    "wealth_index": int(request.form["wealth_index"]),
-    "mother_education": int(request.form["mother_education"]),
-    "currently_breastfeeding": int(request.form["currently_breastfeeding"])
+        "age_months": int(request.form["age_months"]),
+        "sex": int(request.form["sex"]),
+        "weight_kg": float(request.form["weight_kg"]),
+        "height_cm": float(request.form["height_cm"]),
+        "muac_cm": float(request.form["muac_cm"]) if request.form.get("muac_cm") else None,
+        "wealth_index": int(request.form["wealth_index"]),
+        "mother_education": int(request.form["mother_education"]),
+        "currently_breastfeeding": int(request.form["currently_breastfeeding"])
     }
 
     errors = validate_input(sample_child)
@@ -67,7 +67,7 @@ def predict():
         result=result,
         today=datetime.now(),
         pdf_filename=filename
-   )
+    )
 
 @app.route("/download/<filename>")
 def download_report(filename):

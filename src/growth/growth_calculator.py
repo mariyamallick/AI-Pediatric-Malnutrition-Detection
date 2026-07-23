@@ -2,41 +2,53 @@
 WHO Growth Calculator
 
 Calculates:
-- Weight-for-Age Z Score (WAZ)
-- Height-for-Age Z Score (HAZ)
-- Weight-for-Height Z Score (WHZ)
+- WAZ (Weight-for-Age)
+- HAZ / LAZ (Height/Length-for-Age)
+- WHZ (Weight-for-Height)
+- BMI
 
 Author: Mariya Mallick
 """
 
 from pathlib import Path
-import pandas as pd
-import numpy as np
 
-# -------------------------------------------------------
-# WHO Growth Tables
-# -------------------------------------------------------
+import numpy as np
+import pandas as pd
 
 DATA_DIR = Path(__file__).parent / "data"
 
-boys_wfa = pd.read_excel(DATA_DIR / "boys_weight_for_age.xlsx")
-girls_wfa = pd.read_excel(DATA_DIR / "girls_weight_for_age.xlsx")
 
-boys_hfa = pd.read_excel(DATA_DIR / "boys_height_for_age.xlsx")
-girls_hfa = pd.read_excel(DATA_DIR / "girls_height_for_age.xlsx")
+def load_table(filename):
+    df = pd.read_excel(DATA_DIR / filename)
 
-boys_wfh = pd.read_excel(DATA_DIR / "boys_weight_for_height.xlsx")
-girls_wfh = pd.read_excel(DATA_DIR / "girls_weight_for_height.xlsx")
+    # Normalize column names
+    df.columns = (
+        df.columns.astype(str)
+        .str.strip()
+        .str.replace(r"\s+", "", regex=True)
+    )
+
+    return df
 
 
-# -------------------------------------------------------
-# LMS Formula
-# -------------------------------------------------------
+# -------------------------------
+# Load WHO Tables
+# -------------------------------
 
-def lms_zscore(value, L, M, S):
-    """
-    WHO LMS Z-score formula.
-    """
+boys_wfa = load_table("boys_wfa.xlsx")
+girls_wfa = load_table("girls_wfa.xlsx")
+boys_lfa = load_table("boys_lfa.xlsx")
+girls_lfa = load_table("girls_lfa.xlsx")
+boys_hfa = load_table("boys_hfa.xlsx")
+girls_hfa = load_table("girls_hfa.xlsx")
+boys_wfh = load_table("boys_wfh.xlsx")
+girls_wfh = load_table("girls_wfh.xlsx")
+
+# -------------------------------
+# WHO LMS Formula
+# -------------------------------
+
+def calculate_lms(value, L, M, S):
 
     if L == 0:
         return np.log(value / M) / S
@@ -44,42 +56,20 @@ def lms_zscore(value, L, M, S):
     return (((value / M) ** L) - 1) / (L * S)
 
 
-# -------------------------------------------------------
-# Lookup Helpers
-# -------------------------------------------------------
+# -------------------------------
+# Find nearest row
+# -------------------------------
 
-def get_wfa_row(age_months, sex):
+def nearest_row(table, column, value):
 
-    table = boys_wfa if sex == 1 else girls_wfa
+    idx = (table[column] - value).abs().idxmin()
 
-    row = table.iloc[(table["Month"] - age_months).abs().argsort()[:1]]
-
-    return row.iloc[0]
+    return table.loc[idx]
 
 
-def get_hfa_row(age_months, sex):
-
-    table = boys_hfa if sex == 1 else girls_hfa
-
-    row = table.iloc[(table["Month"] - age_months).abs().argsort()[:1]]
-
-    return row.iloc[0]
-
-
-def get_wfh_row(height_cm, sex):
-
-    table = boys_wfh if sex == 1 else girls_wfh
-
-    height_column = table.columns[0]
-
-    row = table.iloc[(table[height_column] - height_cm).abs().argsort()[:1]]
-
-    return row.iloc[0]
-
-
-# -------------------------------------------------------
-# Main Calculator
-# -------------------------------------------------------
+# -------------------------------
+# Main Function
+# -------------------------------
 
 def calculate_z_scores(
     age_months,
@@ -87,57 +77,115 @@ def calculate_z_scores(
     weight_kg,
     height_cm
 ):
-    """
-    Parameters
-    ----------
-    sex
-        Male = 1
-        Female = 0
-    """
 
-    wfa = get_wfa_row(age_months, sex)
-    hfa = get_hfa_row(age_months, sex)
-    wfh = get_wfh_row(height_cm, sex)
+    sex = int(sex)
 
-    waz = lms_zscore(
-        weight_kg,
-        wfa["L"],
-        wfa["M"],
-        wfa["S"]
+    # -------------------------
+    # Weight-for-Age
+    # -------------------------
+
+    wfa = boys_wfa if sex == 1 else girls_wfa
+
+    wfa_row = nearest_row(
+        wfa,
+        "Month",
+        age_months
     )
 
-    haz = lms_zscore(
+    # -------------------------
+    # Length / Height for Age
+    # -------------------------
+
+    if age_months < 24:
+
+        hfa_table = boys_lfa if sex == 1 else girls_lfa
+
+    # Use child's measured length/height
+        hfa_row = nearest_row(
+            hfa_table,
+            "Length",
+            height_cm
+        )
+
+    else:
+
+        hfa_table = boys_hfa if sex == 1 else girls_hfa
+
+        hfa_row = nearest_row(
+            hfa_table,
+            "Month",
+            age_months
+        )
+    # -------------------------
+    # Weight-for-Height
+    # -------------------------
+
+    wfh_table = boys_wfh if sex == 1 else girls_wfh
+
+    first_column = "Height"
+
+    wfh_row = nearest_row(
+        wfh_table,
+        first_column,
+        height_cm
+    )
+
+    # -------------------------
+    # Calculate Z Scores
+    # -------------------------
+
+    waz = calculate_lms(
+        weight_kg,
+        float(wfa_row["L"]),
+        float(wfa_row["M"]),
+        float(wfa_row["S"])
+    )
+
+    haz = calculate_lms(
         height_cm,
-        hfa["L"],
-        hfa["M"],
-        hfa["S"]
+        float(hfa_row["L"]),
+        float(hfa_row["M"]),
+        float(hfa_row["S"])
     )
 
-    whz = lms_zscore(
+    whz = calculate_lms(
         weight_kg,
-        wfh["L"],
-        wfh["M"],
-        wfh["S"]
+        float(wfh_row["L"]),
+        float(wfh_row["M"]),
+        float(wfh_row["S"])
     )
+
+    bmi = weight_kg / ((height_cm / 100) ** 2)
 
     return {
-        "waz": round(float(waz), 2),
-        "haz": round(float(haz), 2),
-        "whz": round(float(whz), 2)
+
+        "waz": round(waz, 2),
+
+        "haz": round(haz, 2),
+
+        "whz": round(whz, 2),
+
+        "bmi": round(bmi, 2)
+
     }
 
 
-# -------------------------------------------------------
+# -------------------------------
 # Testing
-# -------------------------------------------------------
+# -------------------------------
 
 if __name__ == "__main__":
 
     result = calculate_z_scores(
+
         age_months=18,
+
         sex=1,
+
         weight_kg=10.4,
+
         height_cm=79
+
     )
 
     print(result)
