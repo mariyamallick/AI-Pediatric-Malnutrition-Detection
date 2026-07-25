@@ -3,6 +3,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from pathlib import Path
 from datetime import datetime
+from reportlab.lib import colors
 
 
 def generate_pdf_report(features, result):
@@ -20,6 +21,16 @@ def generate_pdf_report(features, result):
     doc = SimpleDocTemplate(str(pdf_path))
 
     styles = getSampleStyleSheet()
+
+    title_style = styles["Title"]
+
+    heading_style = styles["Heading2"]
+
+    heading_style.textColor = colors.darkblue
+
+    body_style = styles["BodyText"]
+
+    body_style.leading = 18
 
     story = []
 
@@ -57,9 +68,15 @@ def generate_pdf_report(features, result):
 
     # --------------------------------------------------
 
-    story.append(Paragraph("<b>Prediction Results</b>", styles["Heading2"]))
-
+    story.append(
+        Paragraph(
+            "<font color='darkblue'><b>AI Prediction Results</b></font>",
+            heading_style
+        )
+    )
     prediction = result["Prediction"]
+
+
 
     story.append(
         Paragraph(
@@ -88,8 +105,12 @@ def generate_pdf_report(features, result):
 
     # --------------------------------------------------
 
-    story.append(Paragraph("<b>Assessment</b>", styles["Heading2"]))
-
+    story.append(
+        Paragraph(
+            "<font color='darkblue'><b>Clinical Assessment</b></font>",
+            heading_style
+        )
+    )
     assessment = result["Assessment"]
 
     for key, value in assessment.items():
@@ -102,7 +123,12 @@ def generate_pdf_report(features, result):
     # --------------------------------------------------
     # --------------------------------------------------
 
-    story.append(Paragraph("<b>Recommendations</b>", styles["Heading2"]))
+    story.append(
+        Paragraph(
+            "<font color='darkblue'><b>Recommendations</b></font>",
+            heading_style
+        )
+    )
 
     for item in result["Recommendations"]:
         story.append(
@@ -111,9 +137,37 @@ def generate_pdf_report(features, result):
 
     story.append(Paragraph("<br/>", styles["Normal"]))
 
+    story.append(
+        Paragraph(
+            "<font color='darkblue'><b>Food Recommendations</b></font>",
+            heading_style
+        )
+    )
+
+    foods = result["Food Recommendations"]
+
+    for category, items in foods.items():
+
+        story.append(
+            Paragraph(f"<b>{category}</b>", body_style)
+        )
+
+        for item in items:
+            story.append(
+                Paragraph("• " + item, body_style)
+            )
+
+        story.append(Paragraph("<br/>", styles["Normal"]))
+
+
     # --------------------------------------------------
 
-    story.append(Paragraph("<b>Medical Alerts</b>", styles["Heading2"]))
+    story.append(
+        Paragraph(  
+            "<font color='darkblue'><b>Medical Alerts</b></font>",
+            heading_style
+        )
+    )
 
     if result["Alerts"]:
 
@@ -139,6 +193,45 @@ def generate_pdf_report(features, result):
         )
     )
 
+    story.append(
+        Paragraph(
+            "<font color='darkblue'><b>Clinical Summary</b></font>",
+            heading_style
+        )
+    )
+
+    story.append(
+        Paragraph(
+            result["Clinical Summary"],
+            body_style
+        )
+    )
+
+    story.append(Paragraph("<br/>", styles["Normal"]))
+
+
+
+    # --------------------------------------------------
+
+
+    story.append(Paragraph("<b>WHO Growth Assessment</b>", styles["Heading2"]))
+
+    growth = result["WHO Growth"]
+
+    story.append(Paragraph(f"WAZ: {growth['waz']:.2f}", styles["BodyText"]))
+    story.append(Paragraph(f"WAZ Status: {growth['waz_status']}", styles["BodyText"]))
+
+    story.append(Paragraph(f"HAZ: {growth['haz']:.2f}", styles["BodyText"]))
+    story.append(Paragraph(f"HAZ Status: {growth['haz_status']}", styles["BodyText"]))
+
+    story.append(Paragraph(f"WHZ: {growth['whz']:.2f}", styles["BodyText"]))
+    story.append(Paragraph(f"WHZ Status: {growth['whz_status']}", styles["BodyText"]))
+
+    story.append(Paragraph(f"BMI: {growth['bmi']:.2f}", styles["BodyText"]))
+
+    story.append(Paragraph("<br/>", styles["Normal"]))
+
+# --------------------------------------------------
     doc.build(story)
 
     return pdf_path
