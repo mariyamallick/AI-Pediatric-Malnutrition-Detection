@@ -1,5 +1,4 @@
 import logging
-from pyexpat import features
 
 import joblib
 
@@ -11,7 +10,9 @@ from src.growth.growth_calculator import calculate_z_scores
 
 from src.recommendations.nutrition_recommendation import generate_recommendation
 
+from src.recommendations.clinical_summary import generate_clinical_summary
 
+from src.recommendations.food_recommendation import generate_food_recommendation
 
 # Project root directory
 
@@ -24,11 +25,16 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 MODEL_DIR = PROJECT_ROOT / "models"
 
 FEATURE_COLUMNS = [
-
-    "age_months", "sex", "weight_kg", "height_cm", "muac_cm",
-
-    "waz", "haz", "whz", "bmi",
-
+    "age_months",
+    "sex",
+    "weight_kg",
+    "height_cm",
+    "wealth_index",
+    "mother_education",
+    "currently_breastfeeding",
+    "waz",
+    "haz",
+    "whz"
 ]
 
 
@@ -55,10 +61,10 @@ def predict_malnutrition(features):
 
 
     growth = calculate_z_scores(
-    age_months=features["age_months"],
-    sex=features["sex"],
-    weight_kg=features["weight_kg"],
-    height_cm=features["height_cm"]
+        age_months=features["age_months"],
+        sex=features["sex"],
+        weight_kg=features["weight_kg"],
+        height_cm=features["height_cm"]
     )
 
     features["waz"] = growth["waz"]
@@ -66,9 +72,36 @@ def predict_malnutrition(features):
     features["whz"] = growth["whz"]
     features["bmi"] = growth["bmi"]
 
-    result = {"WHO Growth": growth}
+    def classify_z_score(z):
+        if z < -3:
+            return "Severe"
+        elif z < -2:
+            return "Moderate"
+        else:
+            return "Normal"
 
-    data = pd.DataFrame([features], columns=FEATURE_COLUMNS)
+    growth["waz_status"] = classify_z_score(growth["waz"])
+    growth["haz_status"] = classify_z_score(growth["haz"])
+    growth["whz_status"] = classify_z_score(growth["whz"])
+
+    
+
+    model_input = pd.DataFrame([{
+        "age_months": features["age_months"],
+        "sex": features["sex"],
+        "weight_kg": features["weight_kg"],
+        "height_cm": features["height_cm"],
+        "wealth_index": features["wealth_index"],
+        "mother_education": features["mother_education"],
+        "currently_breastfeeding": features["currently_breastfeeding"],
+        "waz": features["waz"],
+        "haz": features["haz"],
+        "whz": features["whz"]
+    }])
+
+    data = model_input
+
+
 
     underweight = underweight_model.predict(data)[0]
     underweight_conf = max(underweight_model.predict_proba(data)[0])
@@ -77,7 +110,7 @@ def predict_malnutrition(features):
     wasting = wasting_model.predict(data)[0]
     wasting_conf = max(wasting_model.predict_proba(data)[0])
 
-    result.update({
+    return {
         "underweight": underweight,
         "stunting": stunting,
         "wasting": wasting,
@@ -85,10 +118,9 @@ def predict_malnutrition(features):
             "underweight": round(underweight_conf * 100, 2),
             "stunting": round(stunting_conf * 100, 2),
             "wasting": round(wasting_conf * 100, 2)
-        }
-    })
-
-    return result
+    },
+    "WHO Growth": growth
+    }
 
 
 
@@ -164,6 +196,17 @@ def assess_child(features):
 
     )
 
+    result["WHO Growth"] = predictions["WHO Growth"]
+
+    result["Food Recommendations"] = generate_food_recommendation(
+        predictions["underweight"],
+        predictions["stunting"],
+        predictions["wasting"],
+        features["age_months"]
+    )
+
+
+
     positive_predictions = sum([
 
         predictions["underweight"],
@@ -174,19 +217,6 @@ def assess_child(features):
 
     ])
 
-
-
-    if positive_predictions == 0:
-
-        risk = "Low"
-
-    elif positive_predictions == 1:
-
-        risk = "Moderate"
-
-    else:
-
-        risk = "High"
 
 
     result["Confidence"]=predictions["confidence"]
@@ -201,4 +231,8 @@ def assess_child(features):
 
     print(result)      
 
+    result["Clinical Summary"] = generate_clinical_summary(result)
+
     return result
+
+ 

@@ -65,6 +65,9 @@ df = df[
         "wealth_index",
         "mother_education",
         "currently_breastfeeding",
+        "haz",
+        "waz",
+        "whz",
         "underweight_status",
         "stunting_status",
         "wasting_status"
@@ -119,10 +122,20 @@ X = df[
         "height_cm",
         "wealth_index",
         "mother_education",
-        "currently_breastfeeding"
+        "currently_breastfeeding",
+        "waz",
+        "haz",
+        "whz"
     ]
 ]
-X["currently_breastfeeding"] = X["currently_breastfeeding"].astype(int)
+X = X.copy()
+
+X["currently_breastfeeding"] = (
+    X["currently_breastfeeding"]
+    .fillna(False)
+    .astype(bool)
+    .astype(int)
+)
 
 y_underweight = df["underweight_status"]
 y_stunting = df["stunting_status"]
