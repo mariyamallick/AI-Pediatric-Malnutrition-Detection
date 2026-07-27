@@ -35,14 +35,14 @@ def load_table(filename):
 # Load WHO Tables
 # -------------------------------
 
-boys_wfa = load_table("boys_wfa.xlsx")
-girls_wfa = load_table("girls_wfa.xlsx")
-boys_lfa = load_table("boys_lfa.xlsx")
-girls_lfa = load_table("girls_lfa.xlsx")
-boys_hfa = load_table("boys_hfa.xlsx")
-girls_hfa = load_table("girls_hfa.xlsx")
-boys_wfh = load_table("boys_wfh.xlsx")
-girls_wfh = load_table("girls_wfh.xlsx")
+boys_wfa = pd.read_excel(DATA_DIR / "boys_weight_for_age.xlsx")
+girls_wfa = pd.read_excel(DATA_DIR / "girls_weight_for_age.xlsx")
+boys_lfa = pd.read_excel(DATA_DIR / "boys_length_for_age.xlsx")
+girls_lfa = pd.read_excel(DATA_DIR / "girls_length_for_age.xlsx")
+boys_hfa = pd.read_excel(DATA_DIR / "boys_height_for_age.xlsx")
+girls_hfa = pd.read_excel(DATA_DIR / "girls_height_for_age.xlsx")
+boys_wfh = pd.read_excel(DATA_DIR / "boys_weight_for_height.xlsx")
+girls_wfh = pd.read_excel(DATA_DIR / "girls_weight_for_height.xlsx")
 
 # -------------------------------
 # WHO LMS Formula

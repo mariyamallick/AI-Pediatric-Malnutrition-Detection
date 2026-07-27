@@ -46,6 +46,7 @@ def predict():
         "weight_kg": float(request.form["weight_kg"]),
         "height_cm": float(request.form["height_cm"]),
         "muac_cm": float(request.form["muac_cm"]) if request.form.get("muac_cm") else None,
+
         "wealth_index": int(request.form["wealth_index"]),
         "mother_education": int(request.form["mother_education"]),
         "currently_breastfeeding": int(request.form["currently_breastfeeding"])
