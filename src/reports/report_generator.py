@@ -62,10 +62,19 @@ def generate_pdf_report(features, result):
     )
     story.append(Paragraph(f"Weight: {features['weight_kg']} kg", styles["BodyText"]))
     story.append(Paragraph(f"Height: {features['height_cm']} cm", styles["BodyText"]))
-    story.append(Paragraph(f"MUAC: {features['muac_cm']} cm", styles["BodyText"]))
+
+    muac = features["muac_cm"]
+
+    if muac is None:
+        story.append(
+            Paragraph("MUAC: Not Available", styles["BodyText"])
+        )
+    else:
+        story.append(
+            Paragraph(f"MUAC: {muac} cm", styles["BodyText"])
+        )
 
     story.append(Paragraph("<br/>", styles["Normal"]))
-
     # --------------------------------------------------
 
     story.append(
