@@ -36,14 +36,28 @@ def load_table(filename):
 # -------------------------------
 
 boys_wfa = pd.read_excel(DATA_DIR / "boys_weight_for_age.xlsx")
-girls_wfa = pd.read_excel(DATA_DIR / "girls_weight_for_age.xlsx")
-boys_lfa = pd.read_excel(DATA_DIR / "boys_length_for_age.xlsx")
-girls_lfa = pd.read_excel(DATA_DIR / "girls_length_for_age.xlsx")
-boys_hfa = pd.read_excel(DATA_DIR / "boys_height_for_age.xlsx")
-girls_hfa = pd.read_excel(DATA_DIR / "girls_height_for_age.xlsx")
-boys_wfh = pd.read_excel(DATA_DIR / "boys_weight_for_height.xlsx")
-girls_wfh = pd.read_excel(DATA_DIR / "girls_weight_for_height.xlsx")
+boys_wfa.columns = boys_wfa.columns.str.strip()
 
+girls_wfa = pd.read_excel(DATA_DIR / "girls_weight_for_age.xlsx")
+girls_wfa.columns = girls_wfa.columns.str.strip()
+
+boys_lfa = pd.read_excel(DATA_DIR / "boys_length_for_age.xlsx")
+boys_lfa.columns = boys_lfa.columns.str.strip()
+
+girls_lfa = pd.read_excel(DATA_DIR / "girls_length_for_age.xlsx")
+girls_lfa.columns = girls_lfa.columns.str.strip()
+
+boys_hfa = pd.read_excel(DATA_DIR / "boys_height_for_age.xlsx")
+boys_hfa.columns = boys_hfa.columns.str.strip()
+
+girls_hfa = pd.read_excel(DATA_DIR / "girls_height_for_age.xlsx")
+girls_hfa.columns = girls_hfa.columns.str.strip()
+
+boys_wfh = pd.read_excel(DATA_DIR / "boys_weight_for_height.xlsx")
+boys_wfh.columns = boys_wfh.columns.str.strip()
+
+girls_wfh = pd.read_excel(DATA_DIR / "girls_weight_for_height.xlsx")
+girls_wfh.columns = girls_wfh.columns.str.strip()
 # -------------------------------
 # WHO LMS Formula
 # -------------------------------
