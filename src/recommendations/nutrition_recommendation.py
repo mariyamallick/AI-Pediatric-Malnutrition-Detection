@@ -42,10 +42,16 @@ def generate_recommendation(
     # -----------------------------
     # Severity Assessment
     # -----------------------------
-    if muac < 11.5:
+
+    if muac is None:
+        severity = "MUAC Not Available"
+
+    elif muac < 11.5:
         severity = "Severe Acute Malnutrition (SAM)"
+
     elif muac < 12.5:
         severity = "Moderate Acute Malnutrition (MAM)"
+
     else:
         severity = "Normal"
 
@@ -119,15 +125,20 @@ def generate_recommendation(
     # -----------------------------
     # MUAC Recommendation
     # -----------------------------
-    if muac < 11.5:
+    # MUAC alerts: ensure muac is available before numeric comparisons
+    if muac is None:
         result["Alerts"].append(
-            "URGENT: Child may have Severe Acute Malnutrition (SAM). Immediate medical assessment is recommended."
+            "MUAC not available: measure MUAC to complete nutritional assessment."
         )
-
-    elif muac < 12.5:
-        result["Alerts"].append(
-            "Child may have Moderate Acute Malnutrition (MAM). Close follow-up is recommended."
-        )
+    else:
+        if muac < 11.5:
+            result["Alerts"].append(
+                "URGENT: Child may have Severe Acute Malnutrition (SAM). Immediate medical assessment is recommended."
+            )
+        elif muac < 12.5:
+            result["Alerts"].append(
+                "Child may have Moderate Acute Malnutrition (MAM). Close follow-up is recommended."
+            )
 
     # -----------------------------
     # Age Specific Advice
