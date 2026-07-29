@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+
     <title>AI Pediatric Malnutrition Dashboard</title>
 
     <style>
@@ -40,16 +42,31 @@
             margin-top:10px;
         }
 
-        .green{
-            color:green;
+        /* ---------- ADD THESE BELOW ---------- */
+
+        .badge{
+            padding:6px 12px;
+            border-radius:20px;
+            color:white;
+            font-size:14px;
+            font-weight:bold;
         }
 
-        .orange{
-            color:orange;
+        .success{
+            background:#28a745;
         }
 
-        .red{
-            color:red;
+        .warning{
+            background:#ffc107;
+            color:black;
+        }
+
+        .danger{
+            background:#dc3545;
+        }
+
+        .card hr{
+            margin:20px 0;
         }
 
     </style>
@@ -58,61 +75,120 @@
 
 <body>
 
-<h1>AI Pediatric Malnutrition Dashboard</h1>
-
 <div class="container">
 
+    <!-- Patient Information -->
     <div class="card">
-        <h2>Overall Risk</h2>
-        <div class="value">{{ result["Overall Risk"] }}</div>
-    </div>
 
-    <div class="card">
-        <h2>BMI</h2>
-        <div class="value">
+        <h2>👶 Patient Information</h2>
+
+        <p><b>Age:</b> {{ features["age_months"] }} months</p>
+
+        <p><b>Gender:</b>
+            {% if features["sex"] == 1 %}
+                Male
+            {% else %}
+                Female
+            {% endif %}
+        </p>
+
+        <p><b>Weight:</b> {{ features["weight_kg"] }} kg</p>
+
+        <p><b>Height:</b> {{ features["height_cm"] }} cm</p>
+
+        <p><b>BMI:</b>
             {{ result["WHO Growth"]["bmi"]|round(2) }}
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>Weight-for-Age (WAZ)</h2>
-        <div class="value">
-            {{ result["WHO Growth"]["waz"]|round(2) }}
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>Height-for-Age (HAZ)</h2>
-        <div class="value">
-            {{ result["WHO Growth"]["haz"]|round(2) }}
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>Weight-for-Height (WHZ)</h2>
-        <div class="value">
-            {{ result["WHO Growth"]["whz"]|round(2) }}
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>AI Prediction</h2>
-
-        <p>Underweight :
-            {{ result["Prediction"]["Underweight"] }}
         </p>
 
-        <p>Stunting :
-            {{ result["Prediction"]["Stunting"] }}
-        </p>
+        <p><b>MUAC:</b>
 
-        <p>Wasting :
-            {{ result["Prediction"]["Wasting"] }}
+            {% if features["muac_cm"] %}
+                {{ features["muac_cm"] }} cm
+            {% else %}
+                Not Available
+            {% endif %}
+
         </p>
 
     </div>
 
 </div>
 
+<!-- AI Prediction Card -->
+
+<div class="card">
+
+    <h2>🤖 AI Prediction</h2>
+
+    <p>
+        <b>Underweight:</b>
+
+        {% if result["Prediction"]["Underweight"] %}
+            <span class="badge danger">Detected</span>
+        {% else %}
+            <span class="badge success">Not Detected</span>
+        {% endif %}
+    </p>
+
+    <p>
+        <b>Stunting:</b>
+
+        {% if result["Prediction"]["Stunting"] %}
+            <span class="badge warning">Detected</span>
+        {% else %}
+            <span class="badge success">Not Detected</span>
+        {% endif %}
+    </p>
+
+    <p>
+        <b>Wasting:</b>
+
+        {% if result["Prediction"]["Wasting"] %}
+            <span class="badge danger">Detected</span>
+        {% else %}
+            <span class="badge success">Not Detected</span>
+        {% endif %}
+    </p>
+
+    <hr>
+
+    <h3>Overall Risk</h3>
+
+    <h2>{{ result["Overall Risk"] }}</h2>
+
+</div>
+
+<div class="card" style="text-align:center; margin-top:20px;">
+
+    <a href="/download/{{ pdf_filename }}">
+        <button style="
+            background:#28a745;
+            color:white;
+            padding:12px 25px;
+            border:none;
+            border-radius:10px;
+            font-size:16px;
+            cursor:pointer;
+            margin-right:10px;
+        ">
+            📄 Download PDF Report
+        </button>
+    </a>
+
+    <a href="/">
+        <button style="
+            background:#1565c0;
+            color:white;
+            padding:12px 25px;
+            border:none;
+            border-radius:10px;
+            font-size:16px;
+            cursor:pointer;
+        ">
+            🔄 New Assessment
+        </button>
+    </a>
+
+</div>
+
 </body>
-</html>
