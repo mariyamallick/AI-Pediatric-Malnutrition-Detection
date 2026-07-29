@@ -37,6 +37,15 @@ def validate_input(child):
 def home():
     return render_template("index.html")
 
+@app.route("/dashboard")
+def dashboard():
+
+    return render_template(
+        "dashboard.html",
+        result=None,
+        features=None
+    )
+
 @app.route("/predict", methods=["POST"])
 def predict():
 
@@ -63,7 +72,7 @@ def predict():
     filename = Path(pdf_path).name
 
     return render_template(
-        "results.html",
+        "dashboard.html",
         features=sample_child,
         result=result,
         today=datetime.now(),
@@ -82,13 +91,3 @@ def download_report(filename):
     )
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-    @app.route("/dashboard")
-def dashboard():
-
-    return render_template(
-        "dashboard.html",
-        result=result,
-        features=features
-    )
