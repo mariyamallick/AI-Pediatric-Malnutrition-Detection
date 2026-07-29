@@ -5,6 +5,8 @@
 
     <title>AI Pediatric Malnutrition Dashboard</title>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <style>
 
         body{
@@ -76,6 +78,54 @@
 <body>
 
 <div class="container">
+
+    <div class="row mb-4">
+
+        <div class="col-md-4">
+            <div class="card shadow border-primary">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-heart fs-1 text-primary"></i>
+                    <h5 class="mt-2">Age</h5>
+                    <h3>{{ features["age_months"] }} Months</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="col-md-4">
+            <div class="card shadow border-success">
+                <div class="card-body text-center">
+                    <i class="bi bi-speedometer2 fs-1 text-success"></i>
+                    <h5 class="mt-2">BMI</h5>
+                    <h3>{{ result["WHO Growth"]["bmi"]|round(2) }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow border-danger">
+            <div class="card-body text-center">
+                <i class="bi bi-heart-pulse fs-1 text-danger"></i>
+                <h5 class="mt-2">Overall Risk</h5>
+                <h3>{{ result["Overall Risk"] }}</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="text-center mb-5">
+
+    <h1 class="fw-bold text-primary">
+        AI Pediatric Malnutrition Detection
+    </h1>
+
+    <p class="text-muted">
+        Clinical Decision Support Dashboard
+    </p>
+
+</div>
 
     <!-- Patient Information -->
     <div class="card">
