@@ -156,6 +156,122 @@
 
     <h2>{{ result["Overall Risk"] }}</h2>
 
+<!-- WHO Growth Assessment -->
+
+<div class="card shadow-sm mt-4">
+    <div class="card-header bg-success text-white">
+        <h4>WHO Growth Assessment</h4>
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-3">
+                <div class="border rounded p-3 text-center">
+                    <h5>WAZ</h5>
+                    <h3>{{ result["WHO Growth"]["waz"]|round(2) }}</h3>
+                    <span>{{ result["WHO Growth"]["waz_status"] }}</span>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="border rounded p-3 text-center">
+                    <h5>HAZ</h5>
+                    <h3>{{ result["WHO Growth"]["haz"]|round(2) }}</h3>
+                    <span>{{ result["WHO Growth"]["haz_status"] }}</span>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="border rounded p-3 text-center">
+                    <h5>WHZ</h5>
+                    <h3>{{ result["WHO Growth"]["whz"]|round(2) }}</h3>
+                    <span>{{ result["WHO Growth"]["whz_status"] }}</span>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="border rounded p-3 text-center">
+                    <h5>BMI</h5>
+                    <h3>{{ result["WHO Growth"]["bmi"]|round(2) }}</h3>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Clinical Summary -->
+
+<div class="card shadow-sm mt-4">
+    <div class="card-header bg-info text-white">
+        <h4>Clinical Summary</h4>
+    </div>
+
+    <div class="card-body">
+
+        <p style="font-size:17px; line-height:1.8;">
+            {{ result["Clinical Summary"] }}
+        </p>
+
+    </div>
+</div>
+
+
+<!-- Food Recommendations -->
+
+<div class="card shadow-sm mt-4">
+
+    <div class="card-header bg-warning">
+        <h4>🍽 Food Recommendations</h4>
+    </div>
+
+    <div class="card-body">
+
+        {% if result["Food Recommendations"] %}
+
+            {% for nutrient, foods in result["Food Recommendations"].items() %}
+
+                <div class="mb-4">
+
+                    <h5>{{ nutrient }}</h5>
+
+                    <div class="row">
+
+                        {% for food in foods %}
+
+                            <div class="col-md-3 mb-2">
+
+                                <div class="card border-success">
+
+                                    <div class="card-body text-center">
+
+                                        {{ food }}
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
 </div>
 
 <div class="card" style="text-align:center; margin-top:20px;">
