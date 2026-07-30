@@ -527,6 +527,103 @@
 
 </div>
 
+
+<script>
+
+const ctx = document.getElementById('growthChart');
+
+new Chart(ctx, {
+
+    type: 'bar',
+
+    data: {
+
+        labels: ['WAZ', 'HAZ', 'WHZ'],
+
+        datasets: [{
+
+            label: 'WHO Z-Scores',
+
+            data: [
+
+                {{ result["WHO Growth"]["waz"] }},
+
+                {{ result["WHO Growth"]["haz"] }},
+
+                {{ result["WHO Growth"]["whz"] }}
+
+            ],
+
+            backgroundColor: [
+
+                '#4CAF50',
+
+                '#2196F3',
+
+                '#FF9800'
+
+            ],
+
+            borderColor: [
+
+                '#388E3C',
+
+                '#1976D2',
+
+                '#F57C00'
+
+            ],
+
+            borderWidth: 2
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+
+                display: false
+
+            }
+
+        },
+
+        scales: {
+
+            y: {
+
+                beginAtZero: false,
+
+                min: -5,
+
+                max: 5,
+
+                title: {
+
+                    display: true,
+
+                    text: 'Z-Score'
+
+                }
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+
+
 </body>
 
 </html>

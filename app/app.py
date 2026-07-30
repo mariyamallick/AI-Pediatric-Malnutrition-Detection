@@ -1,6 +1,7 @@
 import sys
 from pathlib import Path
 from datetime import datetime
+from src.database.database import create_table
 
 # Add project root to Python path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -12,7 +13,11 @@ from src.reports.report_generator import generate_pdf_report
 
 print("RUNNING APP FROM:", __file__)
 
+
 app = Flask(__name__)
+
+create_table()
+
 
 def validate_input(child):
 
