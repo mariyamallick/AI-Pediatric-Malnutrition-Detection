@@ -37,14 +37,6 @@ def validate_input(child):
 def home():
     return render_template("index.html")
 
-@app.route("/dashboard")
-def dashboard():
-
-    return render_template(
-        "dashboard.html",
-        result=None,
-        features=None
-    )
 
 @app.route("/predict", methods=["POST"])
 def predict():
