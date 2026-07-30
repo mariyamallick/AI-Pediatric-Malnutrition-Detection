@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AI Pediatric Malnutrition Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container mt-5">
+
+<div class="text-center mb-5">
+
+    <i class="bi bi-heart-pulse-fill text-primary" style="font-size:60px;"></i>
+
+    <h1 class="fw-bold text-primary mt-3">
+        AI Pediatric Malnutrition Detection
+    </h1>
+
+    <p class="lead text-secondary">
+        Clinical Decision Support Dashboard
+    </p>
+
+    <hr class="mt-4">
+
+</div>
+
+<div class="row g-4 mb-5">
+
+    <!-- Age Card -->
+    <div class="col-md-4">
+        <div class="card shadow border-0 text-center h-100">
+            <div class="card-body">
+                <i class="bi bi-person-fill text-primary" style="font-size:45px;"></i>
+                <h5 class="mt-3">Age</h5>
+                <h3>{{ features["age_months"] }} Months</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- BMI Card -->
+    <div class="col-md-4">
+        <div class="card shadow border-0 text-center h-100">
+            <div class="card-body">
+                <i class="bi bi-speedometer2 text-success" style="font-size:45px;"></i>
+                <h5 class="mt-3">BMI</h5>
+                <h3>{{ result["WHO Growth"]["bmi"]|round(2) }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overall Risk -->
+    <div class="col-md-4">
+        <div class="card shadow border-0 text-center h-100">
+            <div class="card-body">
+                <i class="bi bi-heart-pulse-fill text-danger" style="font-size:45px;"></i>
+                <h5 class="mt-3">Overall Risk</h5>
+
+                {% if "High" in result["Overall Risk"] %}
+                    <span class="badge bg-danger fs-6">{{ result["Overall Risk"] }}</span>
+
+                {% elif "Moderate" in result["Overall Risk"] %}
+                    <span class="badge bg-warning text-dark fs-6">{{ result["Overall Risk"] }}</span>
+
+                {% else %}
+                    <span class="badge bg-success fs-6">{{ result["Overall Risk"] }}</span>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+</div>
+    <!-- Patient Information -->
+
+<div class="card shadow-sm mb-5">
+
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">
+            <i class="bi bi-person-vcard-fill"></i>
+            Patient Information
+        </h4>
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <p><strong>Age:</strong> {{ features["age_months"] }} Months</p>
+
+                <p>
+                    <strong>Gender:</strong>
+
+                    {% if features["sex"] == 1 %}
+                        Male
+                    {% else %}
+                        Female
+                    {% endif %}
+
+                </p>
+
+                <p><strong>Weight:</strong> {{ features["weight_kg"] }} kg</p>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <p><strong>Height:</strong> {{ features["height_cm"] }} cm</p>
+
+                <p><strong>BMI:</strong> {{ result["WHO Growth"]["bmi"]|round(2) }}</p>
+
+                <p>
+                    <strong>MUAC:</strong>
+
+                    {% if features["muac_cm"] %}
+                        {{ features["muac_cm"] }} cm
+                    {% else %}
+                        Not Available
+                    {% endif %}
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <!-- AI Prediction -->
+
+<div class="card shadow-sm mb-5">
+
+    <div class="card-header bg-danger text-white">
+        <h4 class="mb-0">
+            <i class="bi bi-cpu-fill"></i>
+            AI Prediction Results
+        </h4>
+    </div>
+
+    <div class="card-body">
+
+        <div class="row text-center">
+
+            <!-- Underweight -->
+            <div class="col-md-4 mb-3">
+
+                <div class="border rounded p-3 h-100">
+
+                    <h5>Underweight</h5>
+
+                    {% if result["Prediction"]["Underweight"] %}
+
+                        <span class="badge bg-danger fs-6">Detected</span>
+
+                    {% else %}
+
+                        <span class="badge bg-success fs-6">Not Detected</span>
+
+                    {% endif %}
+
+                    <hr>
+
+                    <small>Confidence</small>
+
+                    <h5>{{ result["Confidence"]["underweight"] }}%</h5>
+
+                </div>
+
+            </div>
+
+            <!-- Stunting -->
+            <div class="col-md-4 mb-3">
+
+                <div class="border rounded p-3 h-100">
+
+                    <h5>Stunting</h5>
+
+                    {% if result["Prediction"]["Stunting"] %}
+
+                        <span class="badge bg-danger fs-6">Detected</span>
+
+                    {% else %}
+
+                        <span class="badge bg-success fs-6">Not Detected</span>
+
+                    {% endif %}
+
+                    <hr>
+
+                    <small>Confidence</small>
+
+                    <h5>{{ result["Confidence"]["stunting"] }}%</h5>
+
+                </div>
+
+            </div>
+
+            <!-- Wasting -->
+            <div class="col-md-4 mb-3">
+
+                <div class="border rounded p-3 h-100">
+
+                    <h5>Wasting</h5>
+
+                    {% if result["Prediction"]["Wasting"] %}
+
+                        <span class="badge bg-danger fs-6">Detected</span>
+
+                    {% else %}
+
+                        <span class="badge bg-success fs-6">Not Detected</span>
+
+                    {% endif %}
+
+                    <hr>
+
+                    <small>Confidence</small>
+
+                    <h5>{{ result["Confidence"]["wasting"] }}%</h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <!-- WHO Growth -->
+<div class="card shadow-sm mb-5">
+
+    <div class="card-header bg-success text-white">
+        <h4 class="mb-0">
+            <i class="bi bi-graph-up-arrow"></i>
+            WHO Growth Assessment
+        </h4>
+    </div>
+
+    <div class="card-body">
+
+        <div class="row text-center">
+
+            <!-- WAZ -->
+            <div class="col-md-3 mb-3">
+
+                <div class="border rounded p-3 h-100">
+
+                    <h5>WAZ</h5>
+
+                    <h2>{{ result["WHO Growth"]["waz"]|round(2) }}</h2>
+
+                    {% if result["WHO Growth"]["waz_status"] == "Normal" %}
+                        <span class="badge bg-success">{{ result["WHO Growth"]["waz_status"] }}</span>
+
+                    {% elif result["WHO Growth"]["waz_status"] == "Moderate" %}
+                        <span class="badge bg-warning text-dark">{{ result["WHO Growth"]["waz_status"] }}</span>
+
+                    {% else %}
+                        <span class="badge bg-danger">{{ result["WHO Growth"]["waz_status"] }}</span>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <!-- HAZ -->
+            <div class="col-md-3 mb-3">
+
+                <div class="border rounded p-3 h-100">
+
+                    <h5>HAZ</h5>
+
+                    <h2>{{ result["WHO Growth"]["haz"]|round(2) }}</h2>
+
+                    {% if result["WHO Growth"]["haz_status"] == "Normal" %}
+                        <span class="badge bg-success">{{ result["WHO Growth"]["haz_status"] }}</span>
+
+                    {% elif result["WHO Growth"]["haz_status"] == "Moderate" %}
+                        <span class="badge bg-warning text-dark">{{ result["WHO Growth"]["haz_status"] }}</span>
+
+                    {% else %}
+                        <span class="badge bg-danger">{{ result["WHO Growth"]["haz_status"] }}</span>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <!-- WHZ -->
+            <div class="col-md-3 mb-3">
+
+                <div class="border rounded p-3 h-100">
+
+                    <h5>WHZ</h5>
+
+                    <h2>{{ result["WHO Growth"]["whz"]|round(2) }}</h2>
+
+                    {% if result["WHO Growth"]["whz_status"] == "Normal" %}
+                        <span class="badge bg-success">{{ result["WHO Growth"]["whz_status"] }}</span>
+
+                    {% elif result["WHO Growth"]["whz_status"] == "Moderate" %}
+                        <span class="badge bg-warning text-dark">{{ result["WHO Growth"]["whz_status"] }}</span>
+
+                    {% else %}
+                        <span class="badge bg-danger">{{ result["WHO Growth"]["whz_status"] }}</span>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <!-- BMI -->
+            <div class="col-md-3 mb-3">
+
+                <div class="border rounded p-3 h-100">
+
+                    <h5>BMI</h5>
+
+                    <h2>{{ result["WHO Growth"]["bmi"]|round(2) }}</h2>
+
+                    <span class="badge bg-primary">Calculated</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+    <!-- Clinical Summary -->
+
+<div class="card shadow-sm mb-5">
+
+    <div class="card-header bg-info text-white">
+        <h4 class="mb-0">
+            <i class="bi bi-clipboard2-pulse-fill"></i>
+            Clinical Summary
+        </h4>
+    </div>
+
+    <div class="card-body">
+
+        <div class="alert alert-light border-start border-4 border-info">
+
+            <p class="mb-0" style="font-size:17px; line-height:1.8;">
+
+                {{ result["Clinical Summary"] }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<hr>
+
+<div class="text-end">
+
+    <small class="text-muted">
+
+        Generated by AI Pediatric Malnutrition Detection System
+
+    </small>
+
+</div>
+
+    <!-- Food Recommendation -->
+
+<div class="card shadow-sm mb-5">
+
+    <div class="card-header bg-warning">
+        <h4 class="mb-0">
+            <i class="bi bi-basket2-fill"></i>
+            Personalized Food Recommendations
+        </h4>
+    </div>
+
+    <div class="card-body">
+
+        {% if result["Food Recommendations"] %}
+
+            <div class="row">
+
+                {% for nutrient, foods in result["Food Recommendations"].items() %}
+
+                <div class="col-md-6 mb-4">
+
+                    <div class="card border-success h-100">
+
+                        <div class="card-header bg-success text-white">
+
+                            <strong>{{ nutrient }}</strong>
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <ul class="list-group list-group-flush">
+
+                                {% for food in foods %}
+
+                                <li class="list-group-item">
+
+                                    🥗 {{ food }}
+
+                                </li>
+
+                                {% endfor %}
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="alert alert-success">
+
+                No additional food recommendations available.
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>    
+
+    <!-- Buttons -->
+
+<div class="card shadow-sm mb-5">
+
+    <div class="card-body text-center">
+
+        <h4 class="mb-4">
+            <i class="bi bi-tools"></i>
+            Actions
+        </h4>
+
+        <!-- Download PDF -->
+
+        <a href="/download/{{ pdf_filename }}"
+           class="btn btn-success btn-lg me-3">
+
+            <i class="bi bi-file-earmark-pdf-fill"></i>
+
+            Download PDF Report
+
+        </a>
+
+        <!-- New Assessment -->
+
+        <a href="/"
+           class="btn btn-primary btn-lg me-3">
+
+            <i class="bi bi-arrow-repeat"></i>
+
+            New Assessment
+
+        </a>
+
+        <!-- Print -->
+
+        <button
+            onclick="window.print()"
+            class="btn btn-secondary btn-lg">
+
+            <i class="bi bi-printer-fill"></i>
+
+            Print Report
+
+        </button>
+
+    </div>
+
+</div>    
+
+</div>
+
+</body>
+
+</html>
