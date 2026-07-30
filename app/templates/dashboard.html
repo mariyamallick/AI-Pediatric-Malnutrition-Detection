@@ -12,6 +12,10 @@
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body>
@@ -344,6 +348,25 @@
     </div>
 
 </div>
+
+<div class="card shadow-sm mb-5">
+
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">
+            <i class="bi bi-bar-chart-line-fill"></i>
+            WHO Growth Chart
+        </h4>
+    </div>
+
+    <div class="card-body">
+
+        <canvas id="growthChart" height="120"></canvas>
+
+    </div>
+
+</div>
+
+
     <!-- Clinical Summary -->
 
 <div class="card shadow-sm mb-5">
