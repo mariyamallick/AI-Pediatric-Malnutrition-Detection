@@ -15,7 +15,23 @@
     Assessment History
 </h2>
 
-<table class="table table-striped table-bordered">
+<div class="row mb-4">
+
+    <div class="col-md-6">
+
+        <input
+            type="text"
+            id="searchInput"
+            class="form-control"
+            placeholder="Search by Age, Gender or Risk...">
+
+    </div>
+
+</div>
+
+<table
+    class="table table-striped table-bordered"
+    id="historyTable">
 
 <thead class="table-primary">
 
@@ -81,6 +97,32 @@
 ← Back to Home
 
 </a>
+
+<script>
+
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("keyup", function(){
+
+    let value = this.value.toLowerCase();
+
+    let rows = document.querySelectorAll("#historyTable tbody tr");
+
+    rows.forEach(row=>{
+
+        let text = row.innerText.toLowerCase();
+
+        if(text.includes(value))
+            row.style.display="";
+
+        else
+            row.style.display="none";
+
+    });
+
+});
+
+</script>
 
 </body>
 
