@@ -25,6 +25,8 @@
     <th>Date</th>
     <th>Age</th>
     <th>Gender</th>
+    <th>Weight</th>
+    <th>Height</th>
     <th>BMI</th>
     <th>Risk</th>
 
@@ -41,15 +43,31 @@
     <td>{{ row["id"] }}</td>
 
     <td>{{ row["created_at"] }}</td>
-
-    <td>{{ row["age_months"] }}</td>
+ 
+    <td>{{ row["age_months"] }} months</td>
 
     <td>{{ row["sex"] }}</td>
 
+    <td>{{ row["weight"] }} kg</td>
+
+    <td>{{ row["height"] }} cm</td>
+
     <td>{{ row["bmi"]|round(2) }}</td>
 
-    <td>{{ row["overall_risk"] }}</td>
+    <td>
 
+    {% if "High" in row["overall_risk"] %}
+    <span class="badge bg-danger">{{ row["overall_risk"] }}</span>
+
+    {% elif "Moderate" in row["overall_risk"] %}
+    <span class="badge bg-warning text-dark">{{ row["overall_risk"] }}</span>
+
+    {% else %}
+    <span class="badge bg-success">{{ row["overall_risk"] }}</span>
+
+    {% endif %}
+
+    </td>
 </tr>
 
 {% endfor %}
