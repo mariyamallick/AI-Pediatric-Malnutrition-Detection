@@ -1,11 +1,13 @@
 import sys
 from pathlib import Path
 from datetime import datetime
-from src.database.database import create_table
 
 # Add project root to Python path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.database.database import create_table
+
 
 from flask import Flask, render_template, request, send_from_directory
 from src.pipeline.prediction_pipeline import assess_child
