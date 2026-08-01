@@ -43,3 +43,74 @@ def create_table():
 
     conn.commit()
     conn.close()
+
+
+from datetime import datetime
+
+
+def save_assessment(features, result):
+
+    print("save_assessment() called")
+
+    conn = get_connection()
+
+    conn.execute("""
+        INSERT INTO assessments(
+            created_at,
+            age_months,
+            sex,
+            weight,
+            height,
+            bmi,
+            overall_risk,
+            underweight,
+            stunting,
+            wasting
+        )
+        VALUES(?,?,?,?,?,?,?,?,?,?)
+    """, (
+
+        datetime.now().strftime("%Y-%m-%d %H:%M"),
+
+        features["age_months"],
+
+        "Male" if features["sex"] == 1 else "Female",
+
+        features["weight_kg"],
+
+        features["height_cm"],
+
+        result["WHO Growth"]["bmi"],
+
+        result["Overall Risk"],
+
+        int(result["Prediction"]["Underweight"]),
+
+        int(result["Prediction"]["Stunting"]),
+
+        int(result["Prediction"]["Wasting"])
+
+    ))
+
+    conn.commit()
+    conn.close()    
+
+def get_all_assessments():
+
+    conn = get_connection()
+
+    cursor = conn.execute("""
+
+        SELECT *
+
+        FROM assessments
+
+        ORDER BY id DESC
+
+    """)
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return rows

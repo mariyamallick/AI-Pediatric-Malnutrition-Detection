@@ -17,6 +17,52 @@
 
 <div class="row mb-4">
 
+    <div class="col-md-2">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5>Total</h5>
+                <h2>{{ total }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card text-center shadow-sm border-danger">
+            <div class="card-body">
+                <h5>High Risk</h5>
+                <h2 class="text-danger">{{ high }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card text-center shadow-sm border-warning">
+            <div class="card-body">
+                <h5>Moderate</h5>
+                <h2 class="text-warning">{{ moderate }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card text-center shadow-sm border-success">
+            <div class="card-body">
+                <h5>Low Risk</h5>
+                <h2 class="text-success">{{ low }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card text-center shadow-sm border-primary">
+            <div class="card-body">
+                <h5>Avg BMI</h5>
+                <h2>{{ avg_bmi }}</h2>
+            </div>
+        </div>
+    </div>
+    
+
     <div class="col-md-6">
 
         <input

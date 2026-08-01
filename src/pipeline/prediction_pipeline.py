@@ -4,6 +4,8 @@ import joblib
 
 import pandas as pd
 
+print("Loaded prediction_pipeline.py")
+
 from pathlib import Path
 
 from src.growth.growth_calculator import calculate_z_scores
@@ -13,6 +15,8 @@ from src.recommendations.nutrition_recommendation import generate_recommendation
 from src.recommendations.clinical_summary import generate_clinical_summary
 
 from src.recommendations.food_recommendation import generate_food_recommendation
+
+from src.database.database import save_assessment
 
 # Project root directory
 
@@ -167,14 +171,11 @@ def calculate_risk(prediction):
         return "🔴 High Risk"
 
 
-
-
-
 def assess_child(features):
 
+    print("Inside assess_child()")
+
     predictions = predict_malnutrition(features)
-
-
 
     result = generate_recommendation(
 
@@ -232,6 +233,8 @@ def assess_child(features):
     print(result)      
 
     result["Clinical Summary"] = generate_clinical_summary(result)
+
+    save_assessment(features, result)
 
     return result
 
