@@ -14,6 +14,11 @@ from src.recommendations.clinical_summary import generate_clinical_summary
 
 from src.recommendations.food_recommendation import generate_food_recommendation
 
+from src.explainability.shap_explainer import (
+    generate_shap_explanation,
+    generate_ai_summary
+)
+
 # Project root directory
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -232,6 +237,15 @@ def assess_child(features):
     print(result)      
 
     result["Clinical Summary"] = generate_clinical_summary(result)
+
+    result["Explainability"] = generate_shap_explanation(
+    underweight_model,
+    features
+    )
+    result["AI Summary"] = generate_ai_summary(
+    result["Explainability"]
+    )
+
 
     return result
 
