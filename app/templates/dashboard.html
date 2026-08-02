@@ -422,6 +422,292 @@
 
 <div class="card shadow-sm mb-5">
 
+    <div class="card-header bg-success text-white">
+
+        <h4 class="mb-0">
+            <i class="bi bi-graph-up-arrow"></i>
+            Patient Growth Indicators
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered text-center align-middle">
+
+            <thead class="table-light">
+
+                <tr>
+
+                    <th>Indicator</th>
+
+                    <th>Patient Value</th>
+
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+
+                    <td><strong>WAZ</strong></td>
+
+                    <td>{{ result["WHO Growth"]["waz"]|round(2) }}</td>
+
+                    <td>{{ result["WHO Growth"]["waz_status"] }}</td>
+
+                </tr>
+
+                <tr>
+
+                    <td><strong>HAZ</strong></td>
+
+                    <td>{{ result["WHO Growth"]["haz"]|round(2) }}</td>
+
+                    <td>{{ result["WHO Growth"]["haz_status"] }}</td>
+
+                </tr>
+
+                <tr>
+
+                    <td><strong>WHZ</strong></td>
+
+                    <td>{{ result["WHO Growth"]["whz"]|round(2) }}</td>
+
+                    <td>{{ result["WHO Growth"]["whz_status"] }}</td>
+
+                </tr>
+
+                <tr>
+
+                    <td><strong>BMI</strong></td>
+
+                    <td>{{ result["WHO Growth"]["bmi"]|round(2) }}</td>
+
+                    <td>
+                        According to WHO BMI-for-age Standards
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td><strong>MUAC</strong></td>
+
+                    <td>
+
+                        {% if features["muac_cm"] %}
+                            {{ features["muac_cm"] }} cm
+                        {% else %}
+                            Not Available
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        {% if features["muac_cm"] %}
+
+                            {% if features["muac_cm"] >= 12.5 %}
+                                Normal
+                            {% elif features["muac_cm"] >= 11.5 %}
+                                Moderate
+                            {% else %}
+                                Severe
+                            {% endif %}
+
+                        {% else %}
+
+                            —
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<div class="card shadow-sm mb-5">
+
+    <div class="card-header bg-info text-white">
+
+        <h4 class="mb-0">
+
+            <i class="bi bi-info-circle-fill"></i>
+
+            Understanding Growth Indicators
+
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-hover table-bordered">
+
+            <thead class="table-light">
+
+                <tr>
+
+                    <th>Indicator</th>
+
+                    <th>Description</th>
+
+                    <th>Normal Range</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+
+                    <td><strong>WAZ</strong></td>
+
+                    <td>Weight-for-Age compares the child's weight with children of the same age.</td>
+
+                    <td>Z-score ≥ -2</td>
+
+                </tr>
+
+                <tr>
+
+                    <td><strong>HAZ</strong></td>
+
+                    <td>Height-for-Age measures long-term growth and helps identify stunting.</td>
+
+                    <td>Z-score ≥ -2</td>
+
+                </tr>
+
+                <tr>
+
+                    <td><strong>WHZ</strong></td>
+
+                    <td>Weight-for-Height detects wasting and acute malnutrition.</td>
+
+                    <td>Z-score ≥ -2</td>
+
+                </tr>
+
+                <tr>
+
+                    <td><strong>BMI</strong></td>
+
+                    <td>Body Mass Index calculated from weight and height.</td>
+
+                    <td>WHO BMI-for-age Standard</td>
+
+                </tr>
+
+                <tr>
+
+                    <td><strong>MUAC</strong></td>
+
+                    <td>Mid-Upper Arm Circumference is used for screening acute malnutrition.</td>
+
+                    <td>≥ 12.5 cm</td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<div class="card shadow-sm mb-5">
+
+    <div class="card-header bg-warning">
+
+        <h4 class="mb-0">
+
+            WHO Z-Score Interpretation
+
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-striped text-center">
+
+            <thead>
+
+                <tr>
+
+                    <th>Z-Score</th>
+
+                    <th>Interpretation</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+
+                    <td>≥ -2</td>
+
+                    <td class="text-success fw-bold">
+                        Normal Growth
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>-3 to -2</td>
+
+                    <td class="text-warning fw-bold">
+                        Moderate Malnutrition
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>&lt; -3</td>
+
+                    <td class="text-danger fw-bold">
+                        Severe Malnutrition
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+        <div class="alert alert-info mt-3">
+
+            <strong>WHO Recommendation:</strong>
+
+            Children with Z-scores below -2 require nutritional assessment and monitoring. Children below -3 require urgent clinical attention and nutritional intervention.
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card shadow-sm mb-5">
+
     <div class="card-header bg-primary text-white">
         <h4 class="mb-0">
             <i class="bi bi-bar-chart-line-fill"></i>
