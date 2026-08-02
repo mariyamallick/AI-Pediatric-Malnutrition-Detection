@@ -50,9 +50,22 @@ Enter the child's measurements to assess nutritional status.
 
 <input type="number" step="0.1" name="height_cm" required>
 
-<label>MUAC (cm)</label>
+<label class="form-label">
 
-<label>MUAC (cm) - Optional</label>
+    MUAC (cm)
+
+    <span
+        data-bs-toggle="tooltip"
+        data-bs-placement="right"
+        title="Measures the circumference of the upper arm and is used to screen acute malnutrition in children aged 6–59 months."
+        style="cursor:pointer; color:#0d6efd; font-weight:bold;">
+
+        ⓘ
+
+    </span>
+
+</label>
+<label> Optional</label>
 <input
     type="number"
     name="muac_cm"
@@ -95,6 +108,18 @@ Run Nutrition Screening
 </form>
 
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+
+tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+    new bootstrap.Tooltip(tooltipTriggerEl);
+});
+
+</script>
 
 </body>
 
