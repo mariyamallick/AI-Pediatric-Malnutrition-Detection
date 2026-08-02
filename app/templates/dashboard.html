@@ -245,6 +245,77 @@
 
 </div>
 
+<!-- features card -->
+<div class="card shadow-sm mt-4">
+
+    <div class="card-header bg-dark text-white">
+
+        <h4>
+            <i class="bi bi-bar-chart-fill"></i>
+
+            AI Feature Importance
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <p class="text-muted">
+            The model relies on these features while making predictions.
+        </p>
+
+        <table class="table table-striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Feature</th>
+
+                    <th>Importance</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for item in result["Feature Importance"][:8] %}
+
+                <tr>
+
+                    <td>
+                        {{ item.feature.replace("_"," ").title() }}
+                    </td>
+
+                    <td>
+
+                        <div class="progress">
+
+                            <div
+                                class="progress-bar bg-primary"
+
+                                style="width: {{ item.importance*100 }}%;">
+
+                                {{ item.importance }}
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
     <!-- WHO Growth -->
 <div class="card shadow-sm mb-5">
 
@@ -488,7 +559,6 @@
         </h4>
 
         <!-- Download PDF -->
-
         <a href="/download/{{ pdf_filename }}"
            class="btn btn-success btn-lg me-3">
 
@@ -499,7 +569,6 @@
         </a>
 
         <!-- New Assessment -->
-
         <a href="/"
            class="btn btn-primary btn-lg me-3">
 
@@ -509,10 +578,19 @@
 
         </a>
 
-        <!-- Print -->
+        <!-- Assessment History -->
+        <a href="/history"
+           class="btn btn-warning btn-lg me-3">
 
+            <i class="bi bi-clock-history"></i>
+
+            Assessment History
+
+        </a>
+
+        <!-- Print -->
         <button
-            onclick="window.print()"
+            onclick="window.print();"
             class="btn btn-secondary btn-lg">
 
             <i class="bi bi-printer-fill"></i>
@@ -523,10 +601,7 @@
 
     </div>
 
-</div>    
-
 </div>
-
 
 <script>
 

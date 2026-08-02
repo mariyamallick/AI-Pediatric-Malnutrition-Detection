@@ -14,10 +14,9 @@ from src.recommendations.clinical_summary import generate_clinical_summary
 
 from src.recommendations.food_recommendation import generate_food_recommendation
 
-from src.explainability.shap_explainer import (
-    generate_shap_explanation,
-    generate_ai_summary
-)
+from src.database.database import save_assessment
+
+from src.explainability.feature_importance import generate_feature_importance
 
 # Project root directory
 
@@ -238,14 +237,18 @@ def assess_child(features):
 
     result["Clinical Summary"] = generate_clinical_summary(result)
 
-    result["Explainability"] = generate_shap_explanation(
-    underweight_model,
-    features
-    )
-    result["AI Summary"] = generate_ai_summary(
-    result["Explainability"]
-    )
+    shap_features = {
+        col: features[col]
+        for col in FEATURE_COLUMNS
+    }
 
+
+    save_assessment(features, result)
+
+    result["Feature Importance"] = generate_feature_importance(
+        underweight_model,
+        FEATURE_COLUMNS
+    )
 
     return result
 

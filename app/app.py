@@ -6,7 +6,7 @@ from datetime import datetime
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.database.database import create_table
+from src.database.database import create_table, get_all_assessments
 
 
 from flask import Flask, render_template, request, send_from_directory
@@ -77,6 +77,33 @@ def predict():
         today=datetime.now(),
         pdf_filename=filename
     )
+
+@app.route("/history")
+def history():
+
+    assessments = get_all_assessments()
+
+    total = len(assessments)
+
+    high = sum(1 for a in assessments if "High" in a["overall_risk"])
+    moderate = sum(1 for a in assessments if "Moderate" in a["overall_risk"])
+    low = sum(1 for a in assessments if "Low" in a["overall_risk"])
+
+    avg_bmi = (
+        round(sum(a["bmi"] for a in assessments) / total, 2)
+        if total > 0 else 0
+    )
+
+    return render_template(
+        "history.html",
+        assessments=assessments,
+        total=total,
+        high=high,
+        moderate=moderate,
+        low=low,
+        avg_bmi=avg_bmi
+    )
+
 
 @app.route("/download/<filename>")
 def download_report(filename):
