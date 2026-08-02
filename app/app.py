@@ -13,6 +13,12 @@ from flask import Flask, render_template, request, send_from_directory
 from src.pipeline.prediction_pipeline import assess_child
 from src.reports.report_generator import generate_pdf_report
 
+from src.database.database import (
+    create_table,
+    get_all_assessments,
+    get_dashboard_stats
+)
+
 print("RUNNING APP FROM:", __file__)
 
 
@@ -102,6 +108,16 @@ def history():
         moderate=moderate,
         low=low,
         avg_bmi=avg_bmi
+    )
+
+@app.route("/analytics")
+def analytics():
+
+    stats = get_dashboard_stats()
+
+    return render_template(
+        "analytics.html",
+        stats=stats
     )
 
 

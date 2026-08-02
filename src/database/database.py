@@ -117,3 +117,31 @@ def get_all_assessments():
     conn.close()
 
     return rows
+
+def get_dashboard_stats():
+
+    conn = get_connection()
+
+    cursor = conn.execute("""
+
+        SELECT
+
+            COUNT(*) as total,
+
+            AVG(bmi) as avg_bmi,
+
+            SUM(underweight) as underweight,
+
+            SUM(stunting) as stunting,
+
+            SUM(wasting) as wasting
+
+        FROM assessments
+
+    """)
+
+    stats = cursor.fetchone()
+
+    conn.close()
+
+    return stats
