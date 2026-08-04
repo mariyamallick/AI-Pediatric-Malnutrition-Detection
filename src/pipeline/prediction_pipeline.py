@@ -35,10 +35,7 @@ FEATURE_COLUMNS = [
     "height_cm",
     "wealth_index",
     "mother_education",
-    "currently_breastfeeding",
-    "waz",
-    "haz",
-    "whz"
+    "currently_breastfeeding"
 ]
 
 
@@ -97,10 +94,7 @@ def predict_malnutrition(features):
         "height_cm": features["height_cm"],
         "wealth_index": features["wealth_index"],
         "mother_education": features["mother_education"],
-        "currently_breastfeeding": features["currently_breastfeeding"],
-        "waz": features["waz"],
-        "haz": features["haz"],
-        "whz": features["whz"]
+        "currently_breastfeeding": features["currently_breastfeeding"]
     }])
 
     data = model_input

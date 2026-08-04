@@ -1,86 +1,358 @@
-# AI for Pediatric Malnutrition Detection
+# 🩺 AI-Powered Pediatric Malnutrition Detection System
 
-An AI-powered healthcare system that detects pediatric malnutrition and provides personalized nutritional recommendations.
+An Explainable Artificial Intelligence (XAI) based web application for early identification of pediatric malnutrition using Machine Learning, WHO Growth Standards, and clinical decision support.
 
-## Overview
+---
 
-Pediatric malnutrition remains a major global health challenge, particularly in low-resource settings where early diagnosis can be difficult.
+## 📌 Overview
 
-This project aims to develop an AI-powered system capable of detecting malnutrition in children using anthropometric measurements, clinical indicators, and machine learning techniques. The system will also provide personalized nutritional recommendations based on the predicted deficiencies to assist healthcare professionals and caregivers.
+Pediatric malnutrition remains a major global health challenge, particularly in low- and middle-income countries. Early identification of undernutrition can significantly improve clinical outcomes and support timely nutritional interventions.
 
-The project is intended as a clinical decision-support tool and does not replace professional medical diagnosis.
+This project combines Machine Learning with WHO Growth Standard calculations to predict:
 
-## Objectives
+- Underweight
+- Stunting
+- Wasting
 
-    - Detect pediatric malnutrition using AI.
-- Predict the severity of malnutrition.
-- Identify probable nutrient deficiencies.
-- Recommend personalized nutritional guidance.
-- Generate reports for healthcare professionals.
+The system also provides:
 
-## Features
+- WHO Growth Indicators
+- BMI Calculation
+- Personalized Nutrition Recommendations
+- Food Recommendations
+- Clinical Summary
+- SHAP Explainability
+- AI-generated Prediction Summary
+- Assessment History
+- PDF Report Generation
 
-- Data preprocessing
-- Exploratory Data Analysis (EDA)
-- Machine Learning prediction
-- Nutrient deficiency estimation
-- Personalized diet recommendations
-- Explainable AI
-- PDF report generation
-- Web application
+---
 
-## Tech Stack
+## 🚀 Features
+
+### ✅ Machine Learning Prediction
+
+Random Forest models predict:
+
+- Underweight
+- Stunting
+- Wasting
+
+using demographic and anthropometric information.
+
+---
+
+### 📊 WHO Growth Assessment
+
+The application automatically calculates:
+
+- Weight-for-Age Z Score (WAZ)
+- Height-for-Age Z Score (HAZ)
+- Weight-for-Height Z Score (WHZ)
+- Body Mass Index (BMI)
+
+according to WHO Child Growth Standards.
+
+---
+
+### 🧠 Explainable AI (SHAP)
+
+The system provides transparent predictions using SHAP (SHapley Additive Explanations).
+
+For every prediction it shows:
+
+- Most influential features
+- Feature impact
+- Increased/Reduced Risk
+- AI-generated explanation
+
+---
+
+### 🥗 Nutrition Recommendation Engine
+
+Provides nutritional guidance based on:
+
+- Predicted malnutrition status
+- WHO Growth Indicators
+- Child age
+
+---
+
+### 🍎 Food Recommendation System
+
+Suggests age-appropriate food recommendations for:
+
+- Underweight children
+- Stunted children
+- Wasted children
+
+---
+
+### 🏥 Clinical Summary
+
+Automatically generates a concise clinical interpretation for healthcare workers or caregivers.
+
+---
+
+### 📄 PDF Report Generation
+
+Creates downloadable assessment reports including:
+
+- Patient Information
+- Prediction Results
+- WHO Growth Assessment
+- Nutrition Advice
+- Food Recommendations
+- Clinical Summary
+
+---
+
+### 📜 Assessment History
+
+Stores previous assessments using SQLite.
+
+History page includes:
+
+- Previous assessments
+- BMI
+- Overall Risk
+- Prediction history
+- Summary statistics
+
+---
+
+## 🛠 Technology Stack
+
+### Backend
 
 - Python
+- Flask
+
+### Machine Learning
+
+- Scikit-learn
+- Random Forest
+- SHAP
+
+### Data Processing
+
 - Pandas
 - NumPy
-- Scikit-learn
-- XGBoost
-- Flask/FastAPI
+
+### Database
+
+- SQLite
+
+### Reports
+
+- ReportLab
+
+### Frontend
+
 - HTML
 - CSS
-- JavaScript
-- Git
-- GitHub
+- Bootstrap
+- Jinja2
 
-## Status
+---
 
-🚧 Currently under development.
+## 📂 Project Structure
 
-## Documentation
+```
+AI-Pediatric-Malnutrition-Detection/
 
-Project research and planning documents are available in the `docs/` folder.git 
+│
 
-## Web Application
+├── app/
+│   └── app.py
 
-The Flask application provides an AI-assisted screening form for children aged 0–60 months. It validates measurements, calculates BMI, runs the three trained models, and displays the recommendation engine's assessment.
+│
 
-### Run locally
+├── data/
+│   └── raw/
+│       └── dhs_children_combined.csv
 
-Activate the project's virtual environment and install dependencies if needed:
+│
 
-```powershell
-.\.venv\Scripts\Activate.ps1
+├── evaluation/
+│   ├── confusion matrices
+│   ├── classification reports
+│   ├── metrics
+│   ├── model comparison
+│   └── cross validation
+
+│
+
+├── generated_reports/
+
+│
+
+├── models/
+│   ├── underweight_status_model.pkl
+│   ├── stunting_status_model.pkl
+│   └── wasting_status_model.pkl
+
+│
+
+├── src/
+│   ├── database/
+│   ├── explainability/
+│   ├── growth/
+│   ├── pipeline/
+│   ├── recommendations/
+│   ├── reports/
+│   └── training/
+
+│
+
+├── templates/
+
+│
+
+├── database.db
+
+│
+
+└── README.md
+```
+
+---
+
+## 📊 Machine Learning Models
+
+The project trains three independent Random Forest classifiers.
+
+| Model | Target |
+|--------|----------|
+| Model 1 | Underweight |
+| Model 2 | Stunting |
+| Model 3 | Wasting |
+
+---
+
+## 📈 Model Evaluation
+
+The training pipeline automatically performs:
+
+- Train-Test Split (80:20)
+- Accuracy
+- Precision
+- Recall
+- F1 Score
+- Classification Report
+- Confusion Matrix
+- Model Comparison
+- 5-Fold Cross Validation
+
+Models compared:
+
+- Logistic Regression
+- Decision Tree
+- Random Forest
+
+Evaluation reports are automatically saved inside the **evaluation/** folder.
+
+---
+
+## 🩺 WHO Growth Indicators
+
+The system computes:
+
+- Weight-for-Age Z-score (WAZ)
+- Height-for-Age Z-score (HAZ)
+- Weight-for-Height Z-score (WHZ)
+- BMI
+
+These indicators are displayed to assist clinical interpretation alongside AI predictions.
+
+---
+
+## 🔍 Explainable AI
+
+SHAP is used to improve transparency by identifying which patient features contributed most to the model's prediction.
+
+This helps users understand *why* the AI reached its conclusion.
+
+---
+
+## 💾 Database
+
+SQLite stores assessment history including:
+
+- Date
+- Child Information
+- BMI
+- Overall Risk
+- Underweight Prediction
+- Stunting Prediction
+- Wasting Prediction
+
+---
+
+## 📄 Generated Reports
+
+Each assessment can be exported as a PDF containing:
+
+- Child Details
+- Prediction Results
+- WHO Growth Assessment
+- Nutrition Recommendations
+- Food Recommendations
+- Clinical Summary
+
+---
+
+## ▶️ Running the Project
+
+### Install dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-Then start the application from the project root:
+### Train models
 
-```powershell
-python app.py
+```bash
+python src/training/train_models.py
 ```
 
-Open `http://127.0.0.1:5000` in a browser. For a non-development deployment, set a strong `FLASK_SECRET_KEY` environment variable before starting the app.
+### Run the application
 
-## Project Documentation
+```bash
+python app/app.py
+```
 
-- Research Notes: `docs/research.md`
-- Dataset Planning: `docs/dataset.md`
+Open:
 
-## Dataset
+```
+http://127.0.0.1:5000
+```
 
-This project uses the DHS (Demographic and Health Surveys) child dataset as the primary source for model training.
+---
 
-The dataset contains over 213,000 pediatric health records with anthropometric measurements, nutritional indicators, and dietary information.
+## 🎯 Future Enhancements
 
-Synthetic data is used only for application testing and demonstration.
+- Deep Learning Models
+- XGBoost Integration
+- Multi-country Validation
+- Mobile Application
+- Growth Trend Visualization
+- Cloud Deployment
+- Real-time Clinical Dashboard
+- Bias and Fairness Analysis
+
+---
+
+## 👩‍💻 Author
+
+**Mariya Mallick**
+
+B.Tech Computer Science & Engineering
+
+Jamia Hamdard University
+
+---
+
+## 📜 License
+
+This project is intended for educational and research purposes only and is not a substitute for professional medical diagnosis.

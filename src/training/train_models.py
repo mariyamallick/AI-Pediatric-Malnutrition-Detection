@@ -293,10 +293,7 @@ X = df[
         "height_cm",
         "wealth_index",
         "mother_education",
-        "currently_breastfeeding",
-        "waz",
-        "haz",
-        "whz"
+        "currently_breastfeeding"
     ]
 ]
 X = X.copy()

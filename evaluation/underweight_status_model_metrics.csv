@@ -1,2 +1,2 @@
 Model,Accuracy,Precision,Recall,F1 Score
-underweight_status_model,1.0,1.0,1.0,1.0
+underweight_status_model,0.9684291942061595,0.9682637392755128,0.9684291942061595,0.9682896129762397
