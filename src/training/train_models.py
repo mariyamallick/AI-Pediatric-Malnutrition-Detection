@@ -18,9 +18,13 @@ import pathlib
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import (
+    train_test_split,
+    cross_val_score,
+    cross_validate,
+    StratifiedKFold
+)
 
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import (
     accuracy_score,
@@ -223,6 +227,158 @@ def cross_validation(X, y, disease):
         index=False
     )
 
+def compare_models_cross_validation(X, y, disease):
+
+    print("\n" + "=" * 70)
+    print(f"5-FOLD MODEL CROSS-VALIDATION - {disease.upper()}")
+    print("=" * 70)
+
+    cv = StratifiedKFold(
+        n_splits=5,
+        shuffle=True,
+        random_state=42
+    )
+
+    models = {
+        "Logistic Regression": LogisticRegression(
+            max_iter=5000,
+            solver="lbfgs"
+        ),
+
+        "Decision Tree": DecisionTreeClassifier(
+            random_state=42
+        ),
+
+        "Random Forest": RandomForestClassifier(
+            n_estimators=200,
+            random_state=42,
+            n_jobs=-1
+        )
+    }
+
+    scoring = {
+        "accuracy": "accuracy",
+        "precision": "precision_weighted",
+        "recall": "recall_weighted",
+        "f1": "f1_weighted"
+    }
+
+    results = []
+
+    for name, model in models.items():
+
+        print(f"\nTesting: {name}")
+
+        scores = cross_validate(
+            model,
+            X,
+            y,
+            cv=cv,
+            scoring=scoring,
+            n_jobs=-1
+        )
+
+        accuracy_mean = scores["test_accuracy"].mean()
+        accuracy_std = scores["test_accuracy"].std()
+
+        precision_mean = scores["test_precision"].mean()
+        precision_std = scores["test_precision"].std()
+
+        recall_mean = scores["test_recall"].mean()
+        recall_std = scores["test_recall"].std()
+
+        f1_mean = scores["test_f1"].mean()
+        f1_std = scores["test_f1"].std()
+
+        print(
+            f"Accuracy : {accuracy_mean:.4f} ± {accuracy_std:.4f}"
+        )
+
+        print(
+            f"Precision: {precision_mean:.4f} ± {precision_std:.4f}"
+        )
+
+        print(
+            f"Recall   : {recall_mean:.4f} ± {recall_std:.4f}"
+        )
+
+        print(
+            f"F1 Score : {f1_mean:.4f} ± {f1_std:.4f}"
+        )
+
+        results.append({
+            "Disease": disease,
+            "Model": name,
+
+            "Accuracy Mean": accuracy_mean,
+            "Accuracy Std": accuracy_std,
+
+            "Precision Mean": precision_mean,
+            "Precision Std": precision_std,
+
+            "Recall Mean": recall_mean,
+            "Recall Std": recall_std,
+
+            "F1 Mean": f1_mean,
+            "F1 Std": f1_std
+        })
+
+    results_df = pd.DataFrame(results)
+
+    results_df = results_df.sort_values(
+        by="F1 Mean",
+        ascending=False
+    )
+
+    results_df.to_csv(
+        f"evaluation/{disease}_full_cross_validation.csv",
+        index=False
+    )
+
+    print("\nFinal Ranking:")
+    print(
+        results_df[
+            [
+                "Model",
+                "Accuracy Mean",
+                "Accuracy Std",
+                "F1 Mean",
+                "F1 Std"
+            ]
+        ]
+    )
+
+    print(
+        f"\nSaved: evaluation/"
+        f"{disease}_full_cross_validation.csv"
+    )
+
+    return results_df
+
+
+def inspect_decision_tree(X, y, disease):
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y,
+        test_size=0.2,
+        random_state=42,
+        stratify=y
+    )
+
+    tree = DecisionTreeClassifier(
+        random_state=42
+    )
+
+    tree.fit(X_train, y_train)
+
+    print("\n" + "=" * 60)
+    print(f"DECISION TREE COMPLEXITY - {disease.upper()}")
+    print("=" * 60)
+
+    print("Tree Depth:", tree.get_depth())
+    print("Number of Leaves:", tree.get_n_leaves())
+
 df = pd.read_csv("data/raw/dhs_children_combined.csv")
 
 print(df.head())
@@ -350,3 +506,26 @@ compare_models(X, df["wasting_status"], "wasting")
 
 print("\n5-Fold Cross Validation - Wasting\n")
 cross_validation(X, df["wasting_status"], "wasting")
+
+print("\n\nRunning Full Cross-Validation Model Comparison...\n")
+
+
+underweight_cv = compare_models_cross_validation(
+    X,
+    df["underweight_status"],
+    "underweight"
+)
+
+
+stunting_cv = compare_models_cross_validation(
+    X,
+    df["stunting_status"],
+    "stunting"
+)
+
+
+wasting_cv = compare_models_cross_validation(
+    X,
+    df["wasting_status"],
+    "wasting"
+)
