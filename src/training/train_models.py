@@ -31,6 +31,8 @@ from sklearn.metrics import (
     precision_score,
     recall_score,
     f1_score,
+    balanced_accuracy_score,
+    roc_auc_score,
     classification_report,
     confusion_matrix,
     ConfusionMatrixDisplay
@@ -57,9 +59,45 @@ def train_model(X, y, model_name):
     predictions = model.predict(X_test)
 
     accuracy = accuracy_score(y_test, predictions)
-    precision = precision_score(y_test, predictions, average="weighted")
-    recall = recall_score(y_test, predictions, average="weighted")
-    f1 = f1_score(y_test, predictions, average="weighted")
+
+    precision = precision_score(
+        y_test,
+        predictions,
+        average="weighted"
+    )
+
+    recall = recall_score(
+        y_test,
+        predictions,
+        average="weighted"
+    )
+
+    f1 = f1_score(
+        y_test,
+        predictions,
+        average="weighted"
+    )
+
+    macro_f1 = f1_score(
+        y_test,
+        predictions,
+        average="macro"
+    )
+
+    balanced_accuracy = balanced_accuracy_score(
+        y_test,
+        predictions
+    )
+
+    probabilities = model.predict_proba(X_test)
+
+    roc_auc = roc_auc_score(
+        y_test,
+        probabilities,
+        multi_class="ovr",
+        average="macro"  
+    )
+
 
     print(f"\n{'='*60}")
     print(model_name)
@@ -70,6 +108,11 @@ def train_model(X, y, model_name):
     print(f"Recall   : {recall:.4f}")
     print(f"F1 Score : {f1:.4f}")
 
+    print(f"Macro F1 : {macro_f1:.4f}")
+    print(f"Balanced Accuracy: {balanced_accuracy:.4f}")
+    print(f"ROC AUC  : {roc_auc:.4f}")
+
+
     print("\nClassification Report")
     print(classification_report(y_test, predictions))
 
@@ -79,7 +122,10 @@ def train_model(X, y, model_name):
         "Accuracy": accuracy,
         "Precision": precision,
         "Recall": recall,
-        "F1 Score": f1
+        "F1 Score": f1,
+        "Macro F1": macro_f1,
+        "Balanced Accuracy": balanced_accuracy,
+        "ROC AUC": roc_auc
     }])
 
     results.to_csv(
@@ -139,10 +185,15 @@ def compare_models(X, y, disease):
 
     models = {
 
-        "Logistic Regression": LogisticRegression(max_iter=1000),
-
-        "Decision Tree": DecisionTreeClassifier(random_state=42),
-
+        "Logistic Regression": LogisticRegression(
+            max_iter=10000,
+            random_state=42
+        ),
+        "Decision Tree": DecisionTreeClassifier(
+            max_depth=15,
+            min_samples_leaf=20,
+            random_state=42
+        ),
         "Random Forest": RandomForestClassifier(
             n_estimators=200,
             random_state=42
@@ -157,12 +208,38 @@ def compare_models(X, y, disease):
         model.fit(X_train, y_train)
 
         predictions = model.predict(X_test)
+        probabilities = model.predict_proba(X_test)
+
+        macro_f1 = f1_score(
+            y_test,
+            predictions,
+            average="macro"
+        )
+
+        balanced_accuracy = balanced_accuracy_score(
+            y_test,
+            predictions
+        )
+
+        roc_auc = roc_auc_score(
+            y_test,
+            probabilities,
+            multi_class="ovr",
+            average="macro"
+        )
+
+        if name == "Decision Tree":
+            print("Decision Tree Depth:", model.get_depth())
+            print("Decision Tree Leaves:", model.get_n_leaves())
 
         results.append({
 
             "Model": name,
 
-            "Accuracy": accuracy_score(y_test, predictions),
+            "Accuracy": accuracy_score(
+                y_test, 
+                predictions
+            ),
 
             "Precision": precision_score(
                 y_test,
@@ -180,8 +257,12 @@ def compare_models(X, y, disease):
                 y_test,
                 predictions,
                 average="weighted"
-            )
+            ),
 
+            "Macro F1": macro_f1,
+
+            "Balanced Accuracy": balanced_accuracy,
+            "ROC AUC": roc_auc
         })
 
     results = pd.DataFrame(results)
@@ -245,7 +326,9 @@ def compare_models_cross_validation(X, y, disease):
             solver="lbfgs"
         ),
 
-        "Decision Tree": DecisionTreeClassifier(
+        "Decision Tree":DecisionTreeClassifier(
+            max_depth=15,
+            min_samples_leaf=20,
             random_state=42
         ),
 
@@ -367,6 +450,8 @@ def inspect_decision_tree(X, y, disease):
     )
 
     tree = DecisionTreeClassifier(
+        max_depth=15,
+        min_samples_leaf=20,
         random_state=42
     )
 
