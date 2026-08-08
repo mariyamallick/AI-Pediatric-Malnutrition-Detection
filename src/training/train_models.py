@@ -40,6 +40,100 @@ from sklearn.metrics import (
 
 import matplotlib.pyplot as plt
 
+
+def detailed_class_analysis(model, X_test, y_test, model_name, target_name):
+    """
+    Performs detailed class-wise evaluation for a trained multiclass model.
+    """
+
+    y_pred = model.predict(X_test)
+
+    print("\n" + "=" * 70)
+    print(f"{model_name} - {target_name}")
+    print("=" * 70)
+
+    # Overall metrics
+    accuracy = accuracy_score(y_test, y_pred)
+
+    macro_precision = precision_score(
+        y_test,
+        y_pred,
+        average="macro",
+        zero_division=0
+    )
+
+    macro_recall = recall_score(
+        y_test,
+        y_pred,
+        average="macro",
+        zero_division=0
+    )
+
+    macro_f1 = f1_score(
+        y_test,
+        y_pred,
+        average="macro",
+        zero_division=0
+    )
+
+    balanced_acc = balanced_accuracy_score(
+        y_test,
+        y_pred
+    )
+
+    print("\nOverall Metrics:")
+    print(f"Accuracy          : {accuracy:.4f}")
+    print(f"Macro Precision   : {macro_precision:.4f}")
+    print(f"Macro Recall      : {macro_recall:.4f}")
+    print(f"Macro F1          : {macro_f1:.4f}")
+    print(f"Balanced Accuracy : {balanced_acc:.4f}")
+
+    # ROC-AUC
+    if hasattr(model, "predict_proba"):
+
+        y_prob = model.predict_proba(X_test)
+
+        try:
+            auc = roc_auc_score(
+                y_test,
+                y_prob,
+                multi_class="ovr",
+                average="macro"
+            )
+
+            print(f"ROC-AUC           : {auc:.4f}")
+
+        except ValueError:
+            print("ROC-AUC           : Could not calculate")
+
+    # Class-wise report
+    print("\nClass-wise Performance:")
+
+    report = classification_report(
+        y_test,
+        y_pred,
+        labels=[0, 1, 2],
+        target_names=[
+            "Normal",
+            "Moderate",
+            "Severe"
+        ],
+        output_dict=True,
+        zero_division=0
+    )
+
+    for class_name in ["Normal", "Moderate", "Severe"]:
+
+        print(
+            f"{class_name:10s} | "
+            f"Precision: {report[class_name]['precision']:.4f} | "
+            f"Recall: {report[class_name]['recall']:.4f} | "
+            f"F1: {report[class_name]['f1-score']:.4f} | "
+            f"Support: {int(report[class_name]['support'])}"
+        )
+
+    return report
+
 def train_model(X, y, model_name):
     X_train, X_test, y_train, y_test = train_test_split(
         X,
@@ -326,7 +420,7 @@ def compare_models_cross_validation(X, y, disease):
             solver="lbfgs"
         ),
 
-        "Decision Tree":DecisionTreeClassifier(
+        "Decision Tree": DecisionTreeClassifier(
             max_depth=15,
             min_samples_leaf=20,
             random_state=42
@@ -339,11 +433,15 @@ def compare_models_cross_validation(X, y, disease):
         )
     }
 
+    # Metrics used for model comparison
     scoring = {
         "accuracy": "accuracy",
         "precision": "precision_weighted",
         "recall": "recall_weighted",
-        "f1": "f1_weighted"
+        "f1": "f1_weighted",
+        "macro_f1": "f1_macro",
+        "balanced_accuracy": "balanced_accuracy",
+        "roc_auc": "roc_auc_ovr"
     }
 
     results = []
@@ -361,32 +459,58 @@ def compare_models_cross_validation(X, y, disease):
             n_jobs=-1
         )
 
+        # Means
         accuracy_mean = scores["test_accuracy"].mean()
-        accuracy_std = scores["test_accuracy"].std()
-
         precision_mean = scores["test_precision"].mean()
-        precision_std = scores["test_precision"].std()
-
         recall_mean = scores["test_recall"].mean()
-        recall_std = scores["test_recall"].std()
-
         f1_mean = scores["test_f1"].mean()
+        macro_f1_mean = scores["test_macro_f1"].mean()
+        balanced_accuracy_mean = scores["test_balanced_accuracy"].mean()
+        roc_auc_mean = scores["test_roc_auc"].mean()
+
+        # Standard deviations
+        accuracy_std = scores["test_accuracy"].std()
+        precision_std = scores["test_precision"].std()
+        recall_std = scores["test_recall"].std()
         f1_std = scores["test_f1"].std()
+        macro_f1_std = scores["test_macro_f1"].std()
+        balanced_accuracy_std = scores["test_balanced_accuracy"].std()
+        roc_auc_std = scores["test_roc_auc"].std()
 
         print(
-            f"Accuracy : {accuracy_mean:.4f} ± {accuracy_std:.4f}"
+            f"Accuracy           : "
+            f"{accuracy_mean:.4f} ± {accuracy_std:.4f}"
         )
 
         print(
-            f"Precision: {precision_mean:.4f} ± {precision_std:.4f}"
+            f"Precision          : "
+            f"{precision_mean:.4f} ± {precision_std:.4f}"
         )
 
         print(
-            f"Recall   : {recall_mean:.4f} ± {recall_std:.4f}"
+            f"Recall             : "
+            f"{recall_mean:.4f} ± {recall_std:.4f}"
         )
 
         print(
-            f"F1 Score : {f1_mean:.4f} ± {f1_std:.4f}"
+            f"F1 Score           : "
+            f"{f1_mean:.4f} ± {f1_std:.4f}"
+        )
+
+        print(
+            f"Macro F1           : "
+            f"{macro_f1_mean:.4f} ± {macro_f1_std:.4f}"
+        )
+
+        print(
+            f"Balanced Accuracy  : "
+            f"{balanced_accuracy_mean:.4f} ± "
+            f"{balanced_accuracy_std:.4f}"
+        )
+
+        print(
+            f"ROC-AUC            : "
+            f"{roc_auc_mean:.4f} ± {roc_auc_std:.4f}"
         )
 
         results.append({
@@ -403,13 +527,23 @@ def compare_models_cross_validation(X, y, disease):
             "Recall Std": recall_std,
 
             "F1 Mean": f1_mean,
-            "F1 Std": f1_std
+            "F1 Std": f1_std,
+
+            "Macro F1 Mean": macro_f1_mean,
+            "Macro F1 Std": macro_f1_std,
+
+            "Balanced Accuracy Mean": balanced_accuracy_mean,
+            "Balanced Accuracy Std": balanced_accuracy_std,
+
+            "ROC AUC Mean": roc_auc_mean,
+            "ROC AUC Std": roc_auc_std
         })
 
     results_df = pd.DataFrame(results)
 
+    # Rank primarily by Macro F1 because your classes are imbalanced
     results_df = results_df.sort_values(
-        by="F1 Mean",
+        by="Macro F1 Mean",
         ascending=False
     )
 
@@ -419,14 +553,16 @@ def compare_models_cross_validation(X, y, disease):
     )
 
     print("\nFinal Ranking:")
+
     print(
         results_df[
             [
                 "Model",
                 "Accuracy Mean",
-                "Accuracy Std",
                 "F1 Mean",
-                "F1 Std"
+                "Macro F1 Mean",
+                "Balanced Accuracy Mean",
+                "ROC AUC Mean"
             ]
         ]
     )
@@ -437,7 +573,6 @@ def compare_models_cross_validation(X, y, disease):
     )
 
     return results_df
-
 
 def inspect_decision_tree(X, y, disease):
 
