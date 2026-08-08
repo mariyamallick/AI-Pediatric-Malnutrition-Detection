@@ -441,17 +441,35 @@ df["wasting_status"] = df["wasting_status"].map(label_map)
 
 print(df.head())
 
-X = df[
-    [
-        "age_months",
-        "sex",
-        "weight_kg",
-        "height_cm",
-        "wealth_index",
-        "mother_education",
-        "currently_breastfeeding"
-    ]
+# Base features used for leakage-controlled evaluation
+base_features = [
+    "age_months",
+    "sex",
+    "weight_kg",
+    "height_cm",
+    "wealth_index",
+    "mother_education",
+    "currently_breastfeeding"
 ]
+
+X = df[base_features].copy()
+
+X["currently_breastfeeding"] = (
+    X["currently_breastfeeding"]
+    .fillna(False)
+    .astype(bool)
+    .astype(int)
+)
+
+# Leakage-controlled feature sets
+# Remove the z-score that was directly used to create each target.
+
+X_underweight = X.copy()
+
+X_stunting = X.copy()
+
+X_wasting = X.copy()
+
 X = X.copy()
 
 X["currently_breastfeeding"] = (
@@ -466,19 +484,19 @@ y_stunting = df["stunting_status"]
 y_wasting = df["wasting_status"]
 
 train_model(
-    X,
+    X_underweight,
     df["underweight_status"],
     "underweight_status_model"
 )
 
 train_model(
-    X,
+    X_stunting,
     df["stunting_status"],
     "stunting_status_model"
 )
 
 train_model(
-    X,
+    X_wasting,
     df["wasting_status"],
     "wasting_status_model"
 )
