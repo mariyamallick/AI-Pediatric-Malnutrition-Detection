@@ -17,6 +17,12 @@ import pathlib
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import GradientBoostingClassifier
+from xgboost import XGBClassifier
+
 
 from sklearn.model_selection import (
     train_test_split,
@@ -269,6 +275,10 @@ def train_model(X, y, model_name):
 
 def compare_models(X, y, disease):
 
+    print("\n" + "=" * 80)
+    print(f"8-MODEL COMPARISON - {disease.upper()}")
+    print("=" * 80)
+
     X_train, X_test, y_train, y_test = train_test_split(
         X,
         y,
@@ -280,93 +290,218 @@ def compare_models(X, y, disease):
     models = {
 
         "Logistic Regression": LogisticRegression(
-            max_iter=10000,
+            max_iter=5000,
             random_state=42
         ),
+
         "Decision Tree": DecisionTreeClassifier(
             max_depth=15,
             min_samples_leaf=20,
             random_state=42
         ),
+
         "Random Forest": RandomForestClassifier(
             n_estimators=200,
-            random_state=42
-        )
+            random_state=42,
+            n_jobs=-1
+        ),
 
+        "SVM": SVC(
+            kernel="linear",
+            probability=False,
+            random_state=42
+        ),
+
+        "KNN": KNeighborsClassifier(
+            n_neighbors=5,
+            n_jobs=-1
+        ),
+
+        "Gaussian Naive Bayes": GaussianNB(),
+
+        "Gradient Boosting": GradientBoostingClassifier(
+            n_estimators=100,
+            learning_rate=0.1,
+            max_depth=3,
+            random_state=42
+        ),
+
+        "XGBoost": XGBClassifier(
+            n_estimators=100,
+            max_depth=5,
+            learning_rate=0.1,
+            objective="multi:softprob",
+            num_class=3,
+            eval_metric="mlogloss",
+            random_state=42,
+            n_jobs=-1
+        )
     }
 
     results = []
 
     for name, model in models.items():
 
+        print("\n" + "-" * 60)
+        print(f"Training: {name}")
+        print("-" * 60)
+
         model.fit(X_train, y_train)
 
         predictions = model.predict(X_test)
-        probabilities = model.predict_proba(X_test)
 
+        # Basic metrics
+        accuracy = accuracy_score(
+            y_test,
+            predictions
+        )
+
+        precision = precision_score(
+            y_test,
+            predictions,
+            average="weighted",
+            zero_division=0
+        )
+
+        recall = recall_score(
+            y_test,
+            predictions,
+            average="weighted",
+            zero_division=0
+        )
+
+        f1 = f1_score(
+            y_test,
+            predictions,
+            average="weighted",
+            zero_division=0
+        )
+
+        # Macro F1
         macro_f1 = f1_score(
             y_test,
             predictions,
-            average="macro"
+            average="macro",
+            zero_division=0
         )
 
+        # Balanced accuracy
         balanced_accuracy = balanced_accuracy_score(
             y_test,
             predictions
         )
 
-        roc_auc = roc_auc_score(
-            y_test,
-            probabilities,
-            multi_class="ovr",
-            average="macro"
-        )
+        # ROC-AUC
+        roc_auc = None
 
+        if hasattr(model, "predict_proba"):
+
+            try:
+
+                probabilities = model.predict_proba(X_test)
+
+                roc_auc = roc_auc_score(
+                    y_test,
+                    probabilities,
+                    multi_class="ovr",
+                    average="macro"
+                )
+
+            except Exception as e:
+
+                print("ROC-AUC unavailable:", e)
+
+        elif hasattr(model, "decision_function"):
+
+            try:
+
+                decision_scores = model.decision_function(X_test)
+
+                roc_auc = roc_auc_score(
+                    y_test,
+                    decision_scores,
+                    multi_class="ovr",
+                    average="macro"
+                )
+
+            except Exception as e:
+
+                print("ROC-AUC unavailable:", e)
+
+        print(f"Accuracy           : {accuracy:.4f}")
+        print(f"Precision          : {precision:.4f}")
+        print(f"Recall             : {recall:.4f}")
+        print(f"F1 Score           : {f1:.4f}")
+        print(f"Macro F1           : {macro_f1:.4f}")
+        print(f"Balanced Accuracy  : {balanced_accuracy:.4f}")
+
+        if roc_auc is not None:
+            print(f"ROC-AUC            : {roc_auc:.4f}")
+        else:
+            print("ROC-AUC            : N/A")
+
+        # Decision Tree complexity
         if name == "Decision Tree":
-            print("Decision Tree Depth:", model.get_depth())
-            print("Decision Tree Leaves:", model.get_n_leaves())
+
+            print(
+                "Tree Depth         :",
+                model.get_depth()
+            )
+
+            print(
+                "Tree Leaves        :",
+                model.get_n_leaves()
+            )
 
         results.append({
 
+            "Disease": disease,
+
             "Model": name,
 
-            "Accuracy": accuracy_score(
-                y_test, 
-                predictions
-            ),
+            "Accuracy": accuracy,
 
-            "Precision": precision_score(
-                y_test,
-                predictions,
-                average="weighted"
-            ),
+            "Precision": precision,
 
-            "Recall": recall_score(
-                y_test,
-                predictions,
-                average="weighted"
-            ),
+            "Recall": recall,
 
-            "F1 Score": f1_score(
-                y_test,
-                predictions,
-                average="weighted"
-            ),
+            "F1 Score": f1,
 
             "Macro F1": macro_f1,
 
             "Balanced Accuracy": balanced_accuracy,
+
             "ROC AUC": roc_auc
         })
 
-    results = pd.DataFrame(results)
+    results_df = pd.DataFrame(results)
 
-    print(results)
+    # Rank primarily by Macro F1
+    results_df = results_df.sort_values(
+        by="Macro F1",
+        ascending=False
+    )
 
-    results.to_csv(
-        f"evaluation/{disease}_model_comparison.csv",
+    print("\n" + "=" * 80)
+    print(f"FINAL MODEL RANKING - {disease.upper()}")
+    print("=" * 80)
+
+    print(results_df.to_string(index=False))
+
+    # Save complete comparison
+    results_df.to_csv(
+        f"evaluation/{disease}_8_model_comparison.csv",
         index=False
     )
+
+    print(
+        f"\nSaved: evaluation/"
+        f"{disease}_8_model_comparison.csv"
+    )
+
+    return results_df
+
+
 
 def cross_validation(X, y, disease):
     model = RandomForestClassifier(
