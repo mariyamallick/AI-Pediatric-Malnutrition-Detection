@@ -501,7 +501,7 @@ def compare_models(X, y, disease):
 
     return results_df
 
-
+"""
 
 def cross_validation(X, y, disease):
     model = RandomForestClassifier(
@@ -708,7 +708,7 @@ def compare_models_cross_validation(X, y, disease):
     )
 
     return results_df
-
+"""
 def inspect_decision_tree(X, y, disease):
 
     X_train, X_test, y_train, y_test = train_test_split(
@@ -898,6 +898,26 @@ stunting_cv = compare_models_cross_validation(
 
 
 wasting_cv = compare_models_cross_validation(
+    X,
+    df["wasting_status"],
+    "wasting"
+)
+
+print("\n\nRunning 8-Model Comparison...\n")
+
+underweight_8_models = compare_models(
+    X,
+    df["underweight_status"],
+    "underweight"
+)
+
+stunting_8_models = compare_models(
+    X,
+    df["stunting_status"],
+    "stunting"
+)
+
+wasting_8_models = compare_models(
     X,
     df["wasting_status"],
     "wasting"
