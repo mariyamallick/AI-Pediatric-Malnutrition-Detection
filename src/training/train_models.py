@@ -17,7 +17,7 @@ import pathlib
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.svm import SVC
+from sklearn.svm import LinearSVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import GradientBoostingClassifier
@@ -188,16 +188,28 @@ def train_model(X, y, model_name):
         y_test,
         predictions
     )
+    if hasattr(model, "predict_proba"):
+        probabilities = model.predict_proba(X_test)
 
-    probabilities = model.predict_proba(X_test)
+        roc_auc = roc_auc_score(
+            y_test,
+            probabilities,
+            multi_class="ovr",
+            average="macro"
+        )
 
-    roc_auc = roc_auc_score(
-        y_test,
-        probabilities,
-        multi_class="ovr",
-        average="macro"  
-    )
+    elif hasattr(model, "decision_function"):
+        scores = model.decision_function(X_test)
 
+        roc_auc = roc_auc_score(
+            y_test,
+            scores,
+            multi_class="ovr",
+            average="macro"
+        )
+
+    else:
+        roc_auc = float("nan")
 
     print(f"\n{'='*60}")
     print(model_name)
@@ -306,9 +318,9 @@ def compare_models(X, y, disease):
             n_jobs=-1
         ),
 
-        "SVM": SVC(
-            kernel="linear",
-            probability=False,
+        "SVM": LinearSVC(
+            C=1.0,
+            max_iter=5000,
             random_state=42
         ),
 
@@ -398,15 +410,28 @@ def compare_models(X, y, disease):
 
             try:
 
-                probabilities = model.predict_proba(X_test)
+                if hasattr(model, "predict_proba"):
+                    probabilities = model.predict_proba(X_test)
 
-                roc_auc = roc_auc_score(
-                    y_test,
-                    probabilities,
-                    multi_class="ovr",
-                    average="macro"
-                )
+                    roc_auc = roc_auc_score(
+                        y_test,
+                        probabilities,
+                        multi_class="ovr",
+                        average="macro"
+                    )
 
+                elif hasattr(model, "decision_function"):
+                    scores = model.decision_function(X_test)
+
+                    roc_auc = roc_auc_score(
+                        y_test,
+                        scores,
+                        multi_class="ovr",
+                        average="macro"
+                    )
+
+                else:
+                    roc_auc = float("nan")
             except Exception as e:
 
                 print("ROC-AUC unavailable:", e)
