@@ -885,26 +885,26 @@ print("\nComparing Models for Underweight Prediction...\n")
 compare_models(X, df["underweight_status"], "underweight")
 
 
-
+"""
 print("\n5-Fold Cross Validation - Underweight\n")
 cross_validation(X, df["underweight_status"], "underweight")
-
+"""
 
 print("\nComparing Models for Stunting Prediction...\n")
 compare_models(X, df["stunting_status"], "stunting")
-
+"""
 print("\n5-Fold Cross Validation - Stunting\n")
 cross_validation(X, df["stunting_status"], "stunting")
-
+"""
 
 
 print("\nComparing Models for Wasting Prediction...\n")
 compare_models(X, df["wasting_status"], "wasting")
 
-
+"""
 print("\n5-Fold Cross Validation - Wasting\n")
 cross_validation(X, df["wasting_status"], "wasting")
-
+"""
 print("\n\nRunning Full Cross-Validation Model Comparison...\n")
 
 
