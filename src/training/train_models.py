@@ -43,6 +43,8 @@ from sklearn.metrics import (
     confusion_matrix,
     ConfusionMatrixDisplay
 )
+import matplotlib
+matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 
@@ -261,21 +263,28 @@ def train_model(X, y, model_name):
 
     cm = confusion_matrix(y_test, predictions)
 
+    fig, ax = plt.subplots(figsize=(7, 6))
+
     disp = ConfusionMatrixDisplay(
         confusion_matrix=cm
     )
+ 
+    disp.plot(
+        ax=ax,
+        cmap="Blues",
+        values_format="d"
+    )
 
-    disp.plot(cmap="Blues")
+    ax.set_title(model_name)
 
-    plt.title(model_name)
-
-    plt.savefig(
+    fig.savefig(
         f"evaluation/{model_name}_confusion_matrix.png",
         dpi=300,
         bbox_inches="tight"
     )
 
-    plt.close()
+    plt.close(fig)
+
 
     joblib.dump(
         model,
@@ -561,7 +570,7 @@ def cross_validation(X, y, disease):
         f"evaluation/{disease}_cross_validation.csv",
         index=False
     )
-
+"""
 def compare_models_cross_validation(X, y, disease):
 
     print("\n" + "=" * 70)
@@ -733,7 +742,7 @@ def compare_models_cross_validation(X, y, disease):
     )
 
     return results_df
-"""
+
 def inspect_decision_tree(X, y, disease):
 
     X_train, X_test, y_train, y_test = train_test_split(
