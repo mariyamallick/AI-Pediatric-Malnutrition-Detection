@@ -754,41 +754,34 @@ for disease, target in TARGETS.items():
             true_class_mask.sum()
         )
 
-        class_errors = int(
+        class_errors_count = int(
             (
                 true_class_mask
-                &
-                test_data["is_error"]
-            ).sum()
+                & test_data["is_error"]
+            ).sum()     
         )
 
-        class_error_rate = (
-
-            class_errors / class_total
+        class_errors_rate = (   
+            
+            class_errors_count / class_total
 
             if class_total > 0
 
             else 0
         )
 
-
-        class_errors.append({
-
+        class_errors.append({   
+            
             "Disease": disease,
 
-            "Class":
-                CLASS_NAMES[class_id],
+            "Class": CLASS_NAMES[class_id],
 
-            "Total Samples":
-                class_total,
+            "Samples": class_total,
 
-            "Errors":
-                class_errors,
+            "Errors": class_errors_count,
 
-            "Error Rate":
-                class_error_rate
+            "Error Rate": class_errors_rate
         })
-
 
     # ========================================================
     # BOUNDARY ANALYSIS
