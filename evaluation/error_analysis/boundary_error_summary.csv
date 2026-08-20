@@ -1,0 +1,10 @@
+Disease,Boundary Category,Samples,Errors,Error Rate
+underweight,Away from boundary,33650,191,0.005676077265973254
+underweight,Near -2 SD boundary,6407,763,0.11908849695645388
+underweight,Near -3 SD boundary,2609,393,0.15063242621694137
+stunting,Away from boundary,33743,356,0.010550336366061109
+stunting,Near -2 SD boundary,5699,880,0.15441305492191612
+stunting,Near -3 SD boundary,3224,515,0.1597394540942928
+wasting,Away from boundary,37538,107,0.0028504448825190476
+wasting,Near -2 SD boundary,3708,587,0.15830636461704423
+wasting,Near -3 SD boundary,1420,298,0.20985915492957746
