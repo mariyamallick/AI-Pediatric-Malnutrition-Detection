@@ -1,358 +1,248 @@
-# 🩺 AI-Powered Pediatric Malnutrition Detection System
+# Intelligent Cognitive Alarm Platform
 
-An Explainable Artificial Intelligence (XAI) based web application for early identification of pediatric malnutrition using Machine Learning, WHO Growth Standards, and clinical decision support.
-
----
-
-## 📌 Overview
-
-Pediatric malnutrition remains a major global health challenge, particularly in low- and middle-income countries. Early identification of undernutrition can significantly improve clinical outcomes and support timely nutritional interventions.
-
-This project combines Machine Learning with WHO Growth Standard calculations to predict:
-
-- Underweight
-- Stunting
-- Wasting
-
-The system also provides:
-
-- WHO Growth Indicators
-- BMI Calculation
-- Personalized Nutrition Recommendations
-- Food Recommendations
-- Clinical Summary
-- SHAP Explainability
-- AI-generated Prediction Summary
-- Assessment History
-- PDF Report Generation
-
----
-
-## 🚀 Features
-
-### ✅ Machine Learning Prediction
-
-Random Forest models predict:
-
-- Underweight
-- Stunting
-- Wasting
-
-using demographic and anthropometric information.
-
----
-
-### 📊 WHO Growth Assessment
-
-The application automatically calculates:
-
-- Weight-for-Age Z Score (WAZ)
-- Height-for-Age Z Score (HAZ)
-- Weight-for-Height Z Score (WHZ)
-- Body Mass Index (BMI)
-
-according to WHO Child Growth Standards.
-
----
-
-### 🧠 Explainable AI (SHAP)
-
-The system provides transparent predictions using SHAP (SHapley Additive Explanations).
-
-For every prediction it shows:
-
-- Most influential features
-- Feature impact
-- Increased/Reduced Risk
-- AI-generated explanation
-
----
-
-### 🥗 Nutrition Recommendation Engine
-
-Provides nutritional guidance based on:
-
-- Predicted malnutrition status
-- WHO Growth Indicators
-- Child age
-
----
-
-### 🍎 Food Recommendation System
-
-Suggests age-appropriate food recommendations for:
-
-- Underweight children
-- Stunted children
-- Wasted children
-
----
-
-### 🏥 Clinical Summary
-
-Automatically generates a concise clinical interpretation for healthcare workers or caregivers.
-
----
-
-### 📄 PDF Report Generation
-
-Creates downloadable assessment reports including:
-
-- Patient Information
-- Prediction Results
-- WHO Growth Assessment
-- Nutrition Advice
-- Food Recommendations
-- Clinical Summary
-
----
-
-### 📜 Assessment History
-
-Stores previous assessments using SQLite.
-
-History page includes:
-
-- Previous assessments
-- BMI
-- Overall Risk
-- Prediction history
-- Summary statistics
-
----
-
-## 🛠 Technology Stack
-
-### Backend
-
-- Python
-- Flask
-
-### Machine Learning
-
-- Scikit-learn
-- Random Forest
-- SHAP
-
-### Data Processing
-
-- Pandas
-- NumPy
-
-### Database
-
-- SQLite
-
-### Reports
-
-- ReportLab
-
-### Frontend
-
-- HTML
-- CSS
-- Bootstrap
-- Jinja2
-
----
-
-## 📂 Project Structure
-
-```
-AI-Pediatric-Malnutrition-Detection/
-
-│
-
-├── app/
-│   └── app.py
-
-│
-
-├── data/
-│   └── raw/
-│       └── dhs_children_combined.csv
-
-│
-
-├── evaluation/
-│   ├── confusion matrices
-│   ├── classification reports
-│   ├── metrics
-│   ├── model comparison
-│   └── cross validation
-
-│
-
-├── generated_reports/
-
-│
-
-├── models/
-│   ├── underweight_status_model.pkl
-│   ├── stunting_status_model.pkl
-│   └── wasting_status_model.pkl
-
-│
-
-├── src/
-│   ├── database/
-│   ├── explainability/
-│   ├── growth/
-│   ├── pipeline/
-│   ├── recommendations/
-│   ├── reports/
-│   └── training/
-
-│
-
-├── templates/
-
-│
-
-├── database.db
-
-│
-
-└── README.md
-```
-
----
-
-## 📊 Machine Learning Models
-
-The project trains three independent Random Forest classifiers.
-
-| Model | Target |
-|--------|----------|
-| Model 1 | Underweight |
-| Model 2 | Stunting |
-| Model 3 | Wasting |
-
----
-
-## 📈 Model Evaluation
-
-The training pipeline automatically performs:
-
-- Train-Test Split (80:20)
-- Accuracy
-- Precision
-- Recall
-- F1 Score
-- Classification Report
-- Confusion Matrix
-- Model Comparison
-- 5-Fold Cross Validation
-
-Models compared:
-
-- Logistic Regression
-- Decision Tree
-- Random Forest
-
-Evaluation reports are automatically saved inside the **evaluation/** folder.
-
----
-
-## 🩺 WHO Growth Indicators
-
-The system computes:
-
-- Weight-for-Age Z-score (WAZ)
-- Height-for-Age Z-score (HAZ)
-- Weight-for-Height Z-score (WHZ)
-- BMI
-
-These indicators are displayed to assist clinical interpretation alongside AI predictions.
-
----
-
-## 🔍 Explainable AI
-
-SHAP is used to improve transparency by identifying which patient features contributed most to the model's prediction.
-
-This helps users understand *why* the AI reached its conclusion.
-
----
-
-## 💾 Database
-
-SQLite stores assessment history including:
-
-- Date
-- Child Information
-- BMI
-- Overall Risk
-- Underweight Prediction
-- Stunting Prediction
-- Wasting Prediction
-
----
-
-## 📄 Generated Reports
-
-Each assessment can be exported as a PDF containing:
-
-- Child Details
-- Prediction Results
-- WHO Growth Assessment
-- Nutrition Recommendations
-- Food Recommendations
-- Clinical Summary
-
----
-
-## ▶️ Running the Project
-
-### Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### Train models
-
-```bash
-python src/training/train_models.py
-```
-
-### Run the application
-
-```bash
-python app/app.py
-```
-
-Open:
-
-```
-http://127.0.0.1:5000
-```
-
----
-
-## 🎯 Future Enhancements
-
-- Deep Learning Models
-- XGBoost Integration
-- Multi-country Validation
-- Mobile Application
-- Growth Trend Visualization
-- Cloud Deployment
-- Real-time Clinical Dashboard
-- Bias and Fairness Analysis
-
----
-
-## 👩‍💻 Author
-
+## Team Member
 **Mariya Mallick**
 
-B.Tech Computer Science & Engineering
-
-Jamia Hamdard University
+## Branch
+**MariyaMallick**
 
 ---
 
-## 📜 License
+# Project Overview
 
-This project is intended for educational and research purposes only and is not a substitute for professional medical diagnosis.
+The Intelligent Cognitive Alarm Platform is an AI-powered mobile application designed to improve users' wake-up habits. Instead of simply dismissing an alarm, users must complete cognitive challenges such as mathematical problems, logic puzzles, memory challenges, word games, pattern recognition, riddles, and quick quizzes.
+
+The system evaluates user performance, verifies wakefulness, adapts challenge difficulty, analyzes behavior, calculates habit scores, and provides personalized recommendations to encourage healthier wake-up habits.
+
+---
+
+# My Responsibilities (AI/ML)
+
+As the AI/ML developer, my responsibilities included:
+
+- Cognitive Challenge Engine
+- Multiple Cognitive Challenge Categories
+- Difficulty Management
+- Wake-up Verification
+- Adaptive Difficulty
+- Habit Score Algorithm
+- Behavior Analysis
+- Recommendation Engine
+- AI Service Layer
+- Alarm Logic Design
+- Alarm Scheduling Design
+- AI Workflow Design
+- System Architecture
+- Database Schema
+- AI Testing
+- Backend Integration Preparation
+- Final AI Module Documentation
+
+---
+
+# Project Progress
+
+## ✅ Week 1 – Project Planning & Architecture
+
+- Designed System Architecture
+- Designed Database Schema
+- Created HTML Database Schema
+- Planned AI Workflow
+- Created AI Module Structure
+- Initialized AI Project Structure
+
+---
+
+## ✅ Week 2 – AI Challenge & Alarm Design
+
+- Designed Alarm Logic
+- Designed Alarm Scheduling Workflow
+- Designed Challenge Engine Architecture
+- Created Challenge Models
+- Added Sample Dataset
+- Created AI Testing Module
+- Updated AI Documentation
+
+---
+
+## ✅ Week 3 – Cognitive Challenge Engine
+
+Implemented the core Cognitive Challenge Engine.
+
+### Challenge Categories
+
+1. Mathematical Problems
+2. Logic Puzzles
+3. Memory Challenges
+4. Word Games
+5. Pattern Recognition
+6. Riddles
+7. Quick Quizzes
+
+### Features
+
+- Easy difficulty
+- Medium difficulty
+- Hard difficulty
+- Challenge generation
+- Answer validation
+- Score calculation
+- XP reward system
+- Category management
+- Difficulty management
+
+---
+
+## ✅ Week 4 – Wake-up Verification & Adaptive Difficulty
+
+Implemented the wake-up verification workflow.
+
+### Features
+
+- Multiple challenge verification
+- Consecutive correct-answer verification
+- Wake-up verification logic
+- Adaptive difficulty recommendation
+- Challenge flow integration
+- Main program integration
+- User interaction workflow
+
+The system prevents the alarm from being stopped until the required number of challenges are successfully completed.
+
+---
+
+## ✅ Week 5 – User Intelligence
+
+Developed the user intelligence components.
+
+### Habit Score
+
+- Habit score calculation
+- Performance-based scoring
+- Wake-up verification consideration
+- Response-time consideration
+- Streak tracking
+- Habit-level classification
+
+### Behavior Analysis
+
+- Attempt tracking
+- Correct/incorrect answer tracking
+- Response-time tracking
+- XP tracking
+- Success-rate calculation
+- Performance statistics
+
+### Recommendation Engine
+
+- Personalized recommendations
+- Performance-based recommendations
+- Accuracy-based suggestions
+- Response-time-based suggestions
+- Habit improvement recommendations
+
+All major intelligence components were integrated into the main AI workflow.
+
+---
+
+## ✅ Week 6 – AI Service Layer
+
+Created a unified AI service layer for integration with the backend.
+
+### Implemented
+
+- `ai_service.py`
+- Challenge generation service
+- Answer validation service
+- Wake-up verification service
+- Habit score service
+- Behavior analysis service
+- Recommendation service
+- JSON/API-ready responses
+- Independent AI service testing
+
+The AI module was structured so that backend services can communicate with the AI components through a unified interface.
+
+---
+
+## ✅ Week 7 – AI Optimization & Data Handling
+
+Worked on improving the AI workflow and making the system more suitable for continued user interaction.
+
+### Implemented / Worked On
+
+- Performance history handling
+- User behavior tracking
+- Difficulty recommendation based on performance
+- Habit and performance statistics
+- AI workflow optimization
+- Recommendation improvement
+- Testing and debugging of integrated AI components
+
+The AI system was refined to use accumulated performance information when analyzing users and recommending future challenge difficulty.
+
+---
+
+## ✅ Week 8 – Final AI Integration & Documentation
+
+Completed the final AI development and documentation phase.
+
+### Completed
+
+- Finalized AI module structure
+- Tested the integrated AI workflow
+- Verified challenge generation and validation
+- Verified wake-up verification
+- Verified habit score calculation
+- Verified behavior analysis
+- Verified recommendation generation
+- Finalized AI service layer
+- Prepared AI components for backend integration
+- Updated project documentation
+- Updated README
+- Updated project progress documentation
+- Organized AI project files
+- Completed testing and debugging of the AI workflow
+
+### Integration Status
+
+The AI module is structured to communicate with the backend through the AI service layer.
+
+Backend and Flutter integration are team-level components and depend on merging the respective backend and frontend implementations.
+
+---
+
+# AI Workflow
+
+```text
+                    Alarm Trigger
+                         │
+                         ▼
+                Challenge Generation
+                         │
+                         ▼
+                  User Attempts
+                         │
+                         ▼
+                  Answer Validation
+                         │
+                         ▼
+                Wake-up Verification
+                         │
+                         ▼
+                 Behavior Analysis
+                         │
+                         ▼
+                  Habit Score
+                         │
+                         ▼
+              Adaptive Difficulty
+                         │
+                         ▼
+             Recommendation Engine
+                         │
+                         ▼
+                   AI Service
+                         │
+                         ▼
+                Backend / Flutter
