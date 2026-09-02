@@ -125,32 +125,77 @@ print(
 # PREPROCESSING
 # ============================================================
 
-if df["sex"].dtype == object:
+# ---------- SEX ----------
 
-    df["sex"] = df["sex"].map({
-        "M": 1,
-        "F": 0,
-        "Male": 1,
-        "Female": 0
+df["sex"] = (
+    df["sex"]
+    .astype(str)
+    .str.strip()
+    .str.lower()
+    .map({
+        "m": 1,
+        "male": 1,
+        "1": 1,
+
+        "f": 0,
+        "female": 0,
+        "2": 0
     })
+)
 
 
-if df["currently_breastfeeding"].dtype == object:
+# ---------- BREASTFEEDING ----------
 
-    df["currently_breastfeeding"] = (
-        df["currently_breastfeeding"]
-        .astype(str)
-        .str.lower()
-        .map({
-            "yes": 1,
-            "no": 0,
-            "true": 1,
-            "false": 0,
-            "1": 1,
-            "0": 0
-        })
+df["currently_breastfeeding"] = (
+    df["currently_breastfeeding"]
+    .astype(str)
+    .str.strip()
+    .str.lower()
+    .map({
+        "yes": 1,
+        "y": 1,
+        "true": 1,
+        "1": 1,
+
+        "no": 0,
+        "n": 0,
+        "false": 0,
+        "0": 0
+    })
+)
+
+
+# ---------- ENSURE NUMERIC FEATURES ----------
+
+numeric_features = [
+    "age_months",
+    "weight_kg",
+    "height_cm",
+    "wealth_index",
+    "mother_education"
+]
+
+for column in numeric_features:
+
+    df[column] = pd.to_numeric(
+        df[column],
+        errors="coerce"
     )
 
+
+# ---------- CHECK DATA ----------
+
+print("\nFeature data types:")
+
+print(
+    df[FEATURES].dtypes
+)
+
+print("\nMissing values after preprocessing:")
+
+print(
+    df[FEATURES].isnull().sum()
+)
 
 # ============================================================
 # RESULTS
